@@ -1,0 +1,6 @@
+<MarketplaceDetails>
+  <SmallAppTile>ApplicationIcon99.png</SmallAppTile>
+  <LargeAppTile>Background.png</LargeAppTile>
+  <PCAppTile>MarketPlaceImage.png</PCAppTile>
+  <ScreenShots>addFeed.png;feedMain.png;newFeed.png;rssFeed.png;Article.png;setting.png;AllFeed.png;starredFeed.png;</ScreenShots>
+</MarketplaceDetails>

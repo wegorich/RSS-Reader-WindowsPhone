@@ -1,0 +1,46 @@
+﻿<phone:PhoneApplicationPage x:Class="WPRssReader.ChannelPage"
+                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                            xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" d:DesignWidth="480"
+                            d:DesignHeight="728" FontFamily="{StaticResource PhoneFontFamilyNormal}"
+                            FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneForegroundBrush}"
+                            SupportedOrientations="PortraitOrLandscape" Orientation="Portrait">
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0">
+            <TextBlock Text="{Binding Channel.Title}" TextWrapping="Wrap" Margin="12,4"
+                 Style="{StaticResource PhoneTextTitle3Style}" />
+            <Border Background="{StaticResource PhoneAccentBrush}">
+                <TextBlock HorizontalAlignment="Right"
+                   Foreground="White"
+                   Text="{Binding Channel.LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}" TextWrapping="Wrap"
+                   FontSize="{StaticResource PhoneFontSizeSmall}" />
+            </Border>
+        </StackPanel>
+ 
+                <ListBox Grid.Row="1" Name="channelsList" ItemsSource="{Binding Channel.AllArticles}"
+             SelectionChanged="ArticleSelectionChanged" Style="{StaticResource ListOfArticles}"/>
+    </Grid>
+
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="menuBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton x:Name="previewChannel" IconUri="/Toolkit.Content/back.png" Text="preview"
+                                      Click="PreviewChannelClick" />
+            <shell:ApplicationBarIconButton x:Name="checkAll" IconUri="/Toolkit.Content/ApplicationBar.Select.png"
+                                      Text="check_all" Click="CheckAllClick" />
+            <shell:ApplicationBarIconButton x:Name="nextChannel" IconUri="/Toolkit.Content/next.png" Text="next"
+                                      Click="NextChannelClick" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>
