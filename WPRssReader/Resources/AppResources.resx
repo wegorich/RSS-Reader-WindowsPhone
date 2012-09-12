@@ -152,7 +152,7 @@ or copy/paste from browser</value>
     <value>Sorry, can not update...</value>
   </data>
   <data name="date_last_update" xml:space="preserve">
-    <value>Last updated {0}</value>
+    <value>Last update at {0}</value>
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Updating... Please wait.</value>

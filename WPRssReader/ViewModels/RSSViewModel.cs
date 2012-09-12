@@ -415,7 +415,8 @@ namespace WPRssReader
                      "<script src='jquery.lazyload.js' type='text/javascript'></script>" +
                      "<script type='text/javascript'>" +
                      "$(function(){" +
-                     "$('img').lazyload().css('width', '100%');" +
+                        "$('*').lazyload();" +
+                        "$('img').css('width', '100%');"+
                      "});</script>");
             b.Append("<style type='text/css'>" +
                      "*{" +

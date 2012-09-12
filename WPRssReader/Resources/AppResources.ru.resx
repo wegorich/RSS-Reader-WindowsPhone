@@ -152,7 +152,7 @@
     <value>Извините, не удалось обновить ...</value>
   </data>
   <data name="date_last_update" xml:space="preserve">
-    <value>Данные обновлены {0}</value>
+    <value>Данные от {0}</value>
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Обновляю... Пожалуйста подождите.</value>

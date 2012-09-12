@@ -21,15 +21,10 @@ namespace WPRssReader
         private void SaveClick(object sender, EventArgs e)
         {
             var address = RssLink.Text;
-            if (String.IsNullOrEmpty(address)||address.Equals("about:blank"))
+            if (String.IsNullOrEmpty(address)||address.Equals("about:blank")||!(address.Length > 7 && address.StartsWith("http://") || address.Length > 8 && address.StartsWith("https://")))
             {
                 MessageBox.Show(AppResources.add_message_error);
-            }
-
-            if (!address.StartsWith("http://") &&
-                !address.StartsWith("https://"))
-            {
-                address = "http://" + address;
+                return;
             }
             try
             {

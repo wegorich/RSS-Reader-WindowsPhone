@@ -22,7 +22,7 @@
             <Border Background="{StaticResource PhoneAccentBrush}">
                 <TextBlock HorizontalAlignment="Right"
                    Foreground="White"
-                   Text="{Binding Channel.LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}" TextWrapping="Wrap"
+                   Text="{Binding Channel.LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}"  Margin="12,2" TextWrapping="Wrap"
                    FontSize="{StaticResource PhoneFontSizeSmall}" />
             </Border>
         </StackPanel>
