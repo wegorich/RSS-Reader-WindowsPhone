@@ -18,28 +18,27 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0">
             <TextBlock Text="{Binding Channel.Title}" TextWrapping="Wrap" Margin="12,4"
-                 Style="{StaticResource PhoneTextTitle3Style}" />
+                       Style="{StaticResource PhoneTextTitle3Style}" />
             <Border Background="{StaticResource PhoneAccentBrush}">
-                <TextBlock HorizontalAlignment="Right"
-                   Foreground="White"
-                   Text="{Binding Channel.LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}"  Margin="12,2" TextWrapping="Wrap"
-                   FontSize="{StaticResource PhoneFontSizeSmall}" />
+                <TextBlock HorizontalAlignment="Right" Foreground="White"
+                           Text="{Binding Channel.LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}" Margin="12,2"
+                           TextWrapping="Wrap" FontSize="{StaticResource PhoneFontSizeSmall}" />
             </Border>
         </StackPanel>
- 
-                <ListBox Grid.Row="1" Name="channelsList" ItemsSource="{Binding Channel.AllArticles}"
-             SelectionChanged="ArticleSelectionChanged" Style="{StaticResource ListOfArticles}"/>
+
+        <ListBox Grid.Row="1" Name="channelsList" ItemsSource="{Binding Channel.AllArticles}"
+                 SelectionChanged="ArticleSelectionChanged" Style="{StaticResource ListOfArticles}" />
     </Grid>
 
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar x:Name="menuBar" IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton x:Name="previewChannel" IconUri="/Toolkit.Content/back.png" Text="preview"
-                                      Click="PreviewChannelClick" />
+                                            Click="PreviewChannelClick" />
             <shell:ApplicationBarIconButton x:Name="checkAll" IconUri="/Toolkit.Content/ApplicationBar.Select.png"
-                                      Text="check_all" Click="CheckAllClick" />
+                                            Text="check_all" Click="CheckAllClick" />
             <shell:ApplicationBarIconButton x:Name="nextChannel" IconUri="/Toolkit.Content/next.png" Text="next"
-                                      Click="NextChannelClick" />
+                                            Click="NextChannelClick" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 

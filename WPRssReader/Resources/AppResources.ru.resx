@@ -148,6 +148,12 @@
   <data name="check_all" xml:space="preserve">
     <value>Прочитать все</value>
   </data>
+  <data name="contact_me" xml:space="preserve">
+    <value>Идеи и рекомендации пишите на eguurt@gmail.com , всегда рад общению :)</value>
+  </data>
+  <data name="copyright" xml:space="preserve">
+    <value>Автор © Егор Малькевич 2012 г.</value>
+  </data>
   <data name="date_fail" xml:space="preserve">
     <value>Извините, не удалось обновить ...</value>
   </data>
@@ -156,6 +162,12 @@
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Обновляю... Пожалуйста подождите.</value>
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value>отзывы</value>
+  </data>
+  <data name="leave_feedback" xml:space="preserve">
+    <value>Оставить отзыв</value>
   </data>
   <data name="link" xml:space="preserve">
     <value>Ссылка</value>
@@ -224,7 +236,7 @@
     <value>Загружать статей за раз</value>
   </data>
   <data name="setting_feed_on_start" xml:space="preserve">
-    <value>Обновлять каналы при старте приложения</value>
+    <value>Обновлять при старте</value>
   </data>
   <data name="setting_general" xml:space="preserve">
     <value>основные</value>

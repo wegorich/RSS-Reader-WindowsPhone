@@ -20,8 +20,10 @@ namespace WPRssReader
 
         private void SaveClick(object sender, EventArgs e)
         {
-            var address = RssLink.Text;
-            if (String.IsNullOrEmpty(address)||address.Equals("about:blank")||!(address.Length > 7 && address.StartsWith("http://") || address.Length > 8 && address.StartsWith("https://")))
+            string address = RssLink.Text;
+            if (String.IsNullOrEmpty(address) || address.Equals("about:blank") ||
+                !(address.Length > 7 && address.StartsWith("http://") ||
+                  address.Length > 8 && address.StartsWith("https://")))
             {
                 MessageBox.Show(AppResources.add_message_error);
                 return;
@@ -33,10 +35,8 @@ namespace WPRssReader
             }
             catch (Exception)
             {
-                MessageBox.Show(AppResources.add_message_error);   
+                MessageBox.Show(AppResources.add_message_error);
             }
-            
-            
         }
 
         private void CancelClick(object sender, EventArgs e)

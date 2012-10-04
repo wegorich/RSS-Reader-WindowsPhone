@@ -9,6 +9,7 @@ using System.Windows.Navigation;
 using System.Windows.Resources;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 using WPRssReader.Helper;
 using WPRssReader.Model;
 using WPRssReader.Resources;
@@ -93,8 +94,8 @@ namespace WPRssReader
             ViewModel = new RssViewModel(DbConnectionString);
             // Query the local database and load observable collections.
             ViewModel.LoadCollectionsFromDatabase();
-            ViewModel.Accent = ((Color) Current.Resources["PhoneAccentColor"]).ToHTML();
-            ViewModel.Background = (Visibility) Current.Resources["PhoneDarkThemeVisibility"] == Visibility.Visible
+            ViewModel.Accent = ((Color)Current.Resources["PhoneAccentColor"]).ToHTML();
+            ViewModel.Background = (Visibility)Current.Resources["PhoneDarkThemeVisibility"] == Visibility.Visible
                                        ? Colors.Black.ToHTML()
                                        : Colors.White.ToHTML();
             ViewModel.Foreground = ViewModel.Background == Colors.Black.ToHTML()
@@ -107,6 +108,12 @@ namespace WPRssReader
             {
                 ViewModel.DoAddNewArticles();
             }
+        }
+
+        public static void LeaveFeedback()
+        {
+            var marketplaceReviewTask = new MarketplaceReviewTask();
+            marketplaceReviewTask.Show();
         }
 
         // Code to execute when the application is activated (brought to foreground)
@@ -143,11 +150,11 @@ namespace WPRssReader
             // Ensure that required application state is persisted here.
             ShellTile apptile = ShellTile.ActiveTiles.First();
             var appTileData = new StandardTileData
-                                  {
-                                      Count = ViewModel.NewCount,
-                                      BackTitle = AppResources.tile_title,
-                                      BackContent = AppResources.tile_content
-                                  };
+                {
+                    Count = ViewModel.NewCount,
+                    BackTitle = AppResources.tile_title,
+                    BackContent = AppResources.tile_content
+                };
 
             apptile.Update(appTileData);
 
@@ -161,22 +168,22 @@ namespace WPRssReader
                 {
                     StandardTileData secTileData = c.NewCount <= 0
                                                        ? new StandardTileData
-                                                             {
-                                                                 Title = c.Title,
-                                                                 Count = c.NewCount,
-                                                                 BackgroundImage =
-                                                                     new Uri("/Background.png",
-                                                                             UriKind.RelativeOrAbsolute),
-                                                                 BackTitle = AppResources.tile_title,
-                                                                 BackContent = c.Title
-                                                             }
+                                                           {
+                                                               Title = c.Title,
+                                                               Count = c.NewCount,
+                                                               BackgroundImage =
+                                                                   new Uri("/Background.png",
+                                                                           UriKind.RelativeOrAbsolute),
+                                                               BackTitle = AppResources.tile_title,
+                                                               BackContent = c.Title
+                                                           }
                                                        : new StandardTileData
-                                                             {
-                                                                 Title = c.Title,
-                                                                 BackgroundImage =
-                                                                     new Uri("/Background.png",
-                                                                             UriKind.RelativeOrAbsolute)
-                                                             };
+                                                           {
+                                                               Title = c.Title,
+                                                               BackgroundImage =
+                                                                   new Uri("/Background.png",
+                                                                           UriKind.RelativeOrAbsolute)
+                                                           };
 
                     tileToFind.Update(secTileData);
                 }
@@ -207,11 +214,12 @@ namespace WPRssReader
         {
             //These files must match what is included in the application package,
             //or BinaryStream.Dispose below will throw an exception.
-            string[] files = {
-                                 "gray.jpg",
-                                 "jquery.js",
-                                 "jquery.lazyload.js"
-                             };
+            string[] files =
+                {
+                    "gray.jpg",
+                    "jquery.js",
+                    "jquery.lazyload.js"
+                };
 
             IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
 
@@ -222,7 +230,7 @@ namespace WPRssReader
                     StreamResourceInfo sr = GetResourceStream(new Uri(f, UriKind.Relative));
                     using (var br = new BinaryReader(sr.Stream))
                     {
-                        byte[] data = br.ReadBytes((int) sr.Stream.Length);
+                        byte[] data = br.ReadBytes((int)sr.Stream.Length);
                         SaveToIsoStore(f, data);
                     }
                 }

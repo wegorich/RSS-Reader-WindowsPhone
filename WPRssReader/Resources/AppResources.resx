@@ -148,6 +148,12 @@ or copy/paste from browser</value>
   <data name="check_all" xml:space="preserve">
     <value>All read</value>
   </data>
+  <data name="contact_me" xml:space="preserve">
+    <value>Ideas and recomendations you can send to eguurt@gmail.com . I glad to read some news :)</value>
+  </data>
+  <data name="copyright" xml:space="preserve">
+    <value>Copyright © Yahor Malkevich 2012</value>
+  </data>
   <data name="date_fail" xml:space="preserve">
     <value>Sorry, can not update...</value>
   </data>
@@ -156,6 +162,12 @@ or copy/paste from browser</value>
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Updating... Please wait.</value>
+  </data>
+  <data name="feedback" xml:space="preserve">
+    <value>feedback</value>
+  </data>
+  <data name="leave_feedback" xml:space="preserve">
+    <value>Leave feedback</value>
   </data>
   <data name="link" xml:space="preserve">
     <value>Link</value>

@@ -3,20 +3,20 @@
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
              xmlns:local="clr-namespace:WPRssReader.Resources" x:Name="app">
 
-  <!--Application Resources-->
-  <Application.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Style/StylesAndTemplate.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-      <local:LocalizedStrings x:Key="R" />
-    </ResourceDictionary>
-  </Application.Resources>
+    <!--Application Resources-->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Style/StylesAndTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:LocalizedStrings x:Key="R" />
+        </ResourceDictionary>
+    </Application.Resources>
 
-  <Application.ApplicationLifetimeObjects>
-    <!--Required object that handles lifetime events for the application-->
-    <shell:PhoneApplicationService Launching="Application_Launching" Closing="Application_Closing"
-                                   Activated="Application_Activated" Deactivated="Application_Deactivated" />
-  </Application.ApplicationLifetimeObjects>
+    <Application.ApplicationLifetimeObjects>
+        <!--Required object that handles lifetime events for the application-->
+        <shell:PhoneApplicationService Launching="Application_Launching" Closing="Application_Closing"
+                                       Activated="Application_Activated" Deactivated="Application_Deactivated" />
+    </Application.ApplicationLifetimeObjects>
 
 </Application>

@@ -9,36 +9,36 @@
                             Foreground="{StaticResource PhoneForegroundBrush}" SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
                             mc:Ignorable="d" d:DesignHeight="728" d:DesignWidth="480">
 
-  <!--LayoutRoot is the root grid where all page content is placed-->
-  <Grid x:Name="LayoutRoot" Background="Transparent">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-    </Grid.RowDefinitions>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-    <!--TitlePanel contains the name of the application and page title-->
-    <StackPanel x:Name="TitlePanel" Grid.Row="0" DoubleTap="ArticleDoubleTap">
-      <TextBlock Text="{Binding Article.Title}" TextWrapping="Wrap" Margin="12,4"
-                 Style="{StaticResource PhoneTextTitle3Style}" />
-      <Border Background="{StaticResource PhoneAccentBrush}">
-        <TextBlock HorizontalAlignment="Right"
-                   Text="{Binding Article.PubDate,Converter={StaticResource dateConverter}}" Margin="12,2" Foreground="White"
-                   FontSize="{StaticResource PhoneFontSizeSmall}" />
-      </Border>
-    </StackPanel>
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" DoubleTap="ArticleDoubleTap">
+            <TextBlock Text="{Binding Article.Title}" TextWrapping="Wrap" Margin="12,4"
+                       Style="{StaticResource PhoneTextTitle3Style}" />
+            <Border Background="{StaticResource PhoneAccentBrush}">
+                <TextBlock HorizontalAlignment="Right"
+                           Text="{Binding Article.PubDate,Converter={StaticResource dateConverter}}" Margin="12,2" Foreground="White"
+                           FontSize="{StaticResource PhoneFontSizeSmall}" />
+            </Border>
+        </StackPanel>
 
-    <!--ContentPanel - place additional content here-->
-    <Grid x:Name="ContentPanel" Grid.Row="1">
-      <phone:WebBrowser x:Name="Browser" LoadCompleted="WebBrowserNavigated" IsScriptEnabled="True" />
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1">
+            <phone:WebBrowser x:Name="Browser" LoadCompleted="WebBrowserNavigated" IsScriptEnabled="True" />
+        </Grid>
     </Grid>
-  </Grid>
-  <!--Sample code showing usage of ApplicationBar-->
-  <phone:PhoneApplicationPage.ApplicationBar>
-    <shell:ApplicationBar x:Name="menuBar" IsVisible="True" IsMenuEnabled="True">
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/back.png" Text="preview" Click="BarButtonClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/search.png" Text="link" Click="BarButtonClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/favs.png" Text="add_star" Click="BarButtonClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/next.png" Text="next" Click="BarButtonClick" />
-    </shell:ApplicationBar>
-  </phone:PhoneApplicationPage.ApplicationBar>
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="menuBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/back.png" Text="preview" Click="BarButtonClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/search.png" Text="link" Click="BarButtonClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/favs.png" Text="add_star" Click="BarButtonClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/next.png" Text="next" Click="BarButtonClick" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

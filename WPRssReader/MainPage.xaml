@@ -11,163 +11,162 @@
                             FontSize="{StaticResource PhoneFontSizeNormal}" Foreground="{StaticResource PhoneForegroundBrush}"
                             SupportedOrientations="PortraitOrLandscape" Orientation="Portrait">
 
-  <!--LayoutRoot is the root grid where all page content is placed-->
-  <Grid x:Name="LayoutRoot" Background="Transparent">
-    <!--Pivot Control-->
-    <controls:Pivot x:Name="Pivot" Title="RSS JOY" SelectionChanged="PivotSelectionChanged">
-      <!--Pivot item one-->
-      <controls:PivotItem Header="{Binding Path=R.main_feeds, Source={StaticResource R}}">
-        <!--Double line list with text wrapping-->
-        <Grid>
-          <TextBlock Visibility="{Binding Channels.Count,Converter={StaticResource visibilityConverter}}"
-                     FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
-                     Text="{Binding Path=R.main_feeds_empty, Source={StaticResource R}}" />
-          <ListBox x:Name="FirstListBox" ItemsSource="{Binding Channels}"
-                   SelectionChanged="ChanelSelectionChanged">
-            <ListBox.ItemTemplate>
-              <DataTemplate>
-                <Border Padding="{StaticResource PhoneBorderThickness}">
-                  <Grid Height="60">
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="60" />
-                      <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
-                      <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="20" />
-                      </Grid.RowDefinitions>
-                      <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{Binding Title}"
-                                 TextTrimming="None" Style="{StaticResource PhoneTextLargeStyle}" />
-                      <TextBlock Grid.Row="1" VerticalAlignment="Center"
-                                 Text="{Binding LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}" TextWrapping="Wrap"
-                                 Style="{StaticResource PhoneTextSmallStyle}" />
-                    </Grid>
-                    <Border Grid.Column="0" Background="{StaticResource PhoneAccentBrush}"
-                            Opacity="{Binding NewCount,Converter={StaticResource opacityConverter}}">
-                      <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
-                                 Text="{Binding NewCount}" Foreground="White" FontSize="{StaticResource PhoneFontSizeLarge}" />
-                    </Border>
-                    <toolkit:ContextMenuService.ContextMenu>
-                      <toolkit:ContextMenu>
-                        <toolkit:MenuItem
-Header="{Binding Path=R.main_pint_to_start, Source={StaticResource R}}" Click="OnMenuClicked" Tag="START_MENU" />
-                        <toolkit:MenuItem
-Header="{Binding Path=R.main_update, Source={StaticResource R}}" Click="MenuItem_Click" />
-                        <toolkit:MenuItem
-Header="{Binding Path=R.main_move_up, Source={StaticResource R}}" Click="OnMenuClicked" Tag="UP" />
-                        <toolkit:MenuItem
-Header="{Binding Path=R.main_move_down, Source={StaticResource R}}" Click="OnMenuClicked" Tag="DOWN" />
-                        <toolkit:MenuItem
-Header="{Binding Path=R.main_delete, Source={StaticResource R}}" Click="OnMenuClicked" Tag="DELETE" />
-                      </toolkit:ContextMenu>
-                    </toolkit:ContextMenuService.ContextMenu>
-                  </Grid>
-                </Border>
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
-        </Grid>
-      </controls:PivotItem>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <!--Pivot Control-->
+        <controls:Pivot x:Name="Pivot" Title="RSS JOY" SelectionChanged="PivotSelectionChanged">
+            <!--Pivot item one-->
+            <controls:PivotItem Header="{Binding Path=R.main_feeds, Source={StaticResource R}}">
+                <!--Double line list with text wrapping-->
+                <Grid>
+                    <TextBlock Visibility="{Binding Channels.Count,Converter={StaticResource visibilityConverter}}"
+                               FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
+                               Text="{Binding Path=R.main_feeds_empty, Source={StaticResource R}}" />
+                    <ListBox x:Name="FirstListBox" ItemsSource="{Binding Channels}" SelectionChanged="ChanelSelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="{StaticResource PhoneBorderThickness}">
+                                    <Grid Height="60">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="40" />
+                                                <RowDefinition Height="20" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="{Binding Title}" TextTrimming="None"
+                                                       Style="{StaticResource PhoneTextLargeStyle}" />
+                                            <TextBlock Grid.Row="1" VerticalAlignment="Center"
+                                                       Text="{Binding LastUpdate, Converter={StaticResource dateConverter},ConverterParameter=false}" TextWrapping="Wrap"
+                                                       Style="{StaticResource PhoneTextSmallStyle}" />
+                                        </Grid>
+                                        <Border Grid.Column="0" Background="{StaticResource PhoneAccentBrush}"
+                                                Opacity="{Binding NewCount,Converter={StaticResource opacityConverter}}">
+                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding NewCount}"
+                                                       Foreground="White" FontSize="{StaticResource PhoneFontSizeLarge}" />
+                                        </Border>
+                                        <toolkit:ContextMenuService.ContextMenu>
+                                            <toolkit:ContextMenu>
+                                                <toolkit:MenuItem Header="{Binding Path=R.main_pint_to_start, Source={StaticResource R}}"
+                                                                  Click="OnMenuClicked" Tag="START_MENU" />
+                                                <toolkit:MenuItem Header="{Binding Path=R.main_update, Source={StaticResource R}}"
+                                                                  Click="MenuItem_Click" />
+                                                <toolkit:MenuItem Header="{Binding Path=R.main_move_up, Source={StaticResource R}}"
+                                                                  Click="OnMenuClicked" Tag="UP" />
+                                                <toolkit:MenuItem Header="{Binding Path=R.main_move_down, Source={StaticResource R}}"
+                                                                  Click="OnMenuClicked" Tag="DOWN" />
+                                                <toolkit:MenuItem Header="{Binding Path=R.main_delete, Source={StaticResource R}}"
+                                                                  Click="OnMenuClicked" Tag="DELETE" />
+                                            </toolkit:ContextMenu>
+                                        </toolkit:ContextMenuService.ContextMenu>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:PivotItem>
 
-      <!--Pivot item two-->
-      <controls:PivotItem Header="{Binding Path=R.main_all, Source={StaticResource R}}">
-        <!--Triple line list no text wrapping-->
-        <ScrollViewer>
-          <StackPanel>
-            <TextBlock
-Visibility="{Binding AllArticles.Count,Converter={StaticResource visibilityConverter}}"
-FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
-Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
-            <ListBox ItemsSource="{Binding AllArticles}" SelectionChanged="ArticleSelectionChanged"
-                     Tag="all" ScrollViewer.VerticalScrollBarVisibility="Disabled" Style="{StaticResource ListOfArticles}" />
-            <Button BorderBrush="Transparent" Tag="ALL" Click="LoadButtonClick"
-                    Visibility="{Binding CanLoadAllArticles,Converter={StaticResource visibilityConverter}}">
-              <TextBlock Style="{StaticResource TextLoadMore}"
-                         Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
-            </Button>
-          </StackPanel>
-        </ScrollViewer>
-      </controls:PivotItem>
+            <!--Pivot item two-->
+            <controls:PivotItem Header="{Binding Path=R.main_all, Source={StaticResource R}}">
+                <!--Triple line list no text wrapping-->
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Visibility="{Binding AllArticles.Count,Converter={StaticResource visibilityConverter}}"
+                                   FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
+                                   Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
+                        <ListBox ItemsSource="{Binding AllArticles}" SelectionChanged="ArticleSelectionChanged" Tag="all"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" Style="{StaticResource ListOfArticles}" />
+                        <Button BorderBrush="Transparent" Tag="ALL" Click="LoadButtonClick"
+                                Visibility="{Binding CanLoadAllArticles,Converter={StaticResource visibilityConverter}}">
+                            <TextBlock Style="{StaticResource TextLoadMore}"
+                                       Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:PivotItem>
 
-      <!--Pivot item tree-->
-      <controls:PivotItem Header="{Binding Path=R.main_new, Source={StaticResource R}}">
-        <!--Triple line list no text wrapping-->
-        <ScrollViewer>
-          <StackPanel>
-            <TextBlock
-Visibility="{Binding NewArticles.Count,Converter={StaticResource visibilityConverter}}"
-FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
-Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
-            <ListBox ItemsSource="{Binding NewArticles}" SelectionChanged="ArticleSelectionChanged"
-                     Tag="new" ScrollViewer.VerticalScrollBarVisibility="Disabled" Style="{StaticResource ListOfArticles}" />
-            <Button BorderBrush="Transparent" Tag="NEW" Click="LoadButtonClick"
-                    Visibility="{Binding CanLoadNewArticles,Converter={StaticResource visibilityConverter}}">
-              <TextBlock Style="{StaticResource TextLoadMore}"
-                         Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
-            </Button>
-          </StackPanel>
-        </ScrollViewer>
-      </controls:PivotItem>
+            <!--Pivot item tree-->
+            <controls:PivotItem Header="{Binding Path=R.main_new, Source={StaticResource R}}">
+                <!--Triple line list no text wrapping-->
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Visibility="{Binding NewArticles.Count,Converter={StaticResource visibilityConverter}}"
+                                   FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
+                                   Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
+                        <ListBox ItemsSource="{Binding NewArticles}" SelectionChanged="ArticleSelectionChanged" Tag="new"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" Style="{StaticResource ListOfArticles}" />
+                        <Button BorderBrush="Transparent" Tag="NEW" Click="LoadButtonClick"
+                                Visibility="{Binding CanLoadNewArticles,Converter={StaticResource visibilityConverter}}">
+                            <TextBlock Style="{StaticResource TextLoadMore}"
+                                       Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:PivotItem>
 
-      <!--Pivot item tree-->
-      <controls:PivotItem Header="{Binding Path=R.main_starred, Source={StaticResource R}}">
-        <!--Triple line list no text wrapping-->
-        <ScrollViewer>
-          <StackPanel>
-            <TextBlock
-Visibility="{Binding StaredArticles.Count,Converter={StaticResource visibilityConverter}}"
-FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
-Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
-            <ListBox ItemsSource="{Binding StaredArticles}" SelectionChanged="ArticleSelectionChanged"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled" Tag="stared" Style="{StaticResource ListOfArticles}" />
-            <Button BorderBrush="Transparent" Tag="STARED" Click="LoadButtonClick"
-                    Visibility="{Binding CanLoadStaredArticles,Converter={StaticResource visibilityConverter}}">
-              <TextBlock Style="{StaticResource TextLoadMore}"
-                         Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
-            </Button>
-          </StackPanel>
-        </ScrollViewer>
-      </controls:PivotItem>
-    </controls:Pivot>
-  </Grid>
+            <!--Pivot item tree-->
+            <controls:PivotItem Header="{Binding Path=R.main_starred, Source={StaticResource R}}">
+                <!--Triple line list no text wrapping-->
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Visibility="{Binding StaredArticles.Count,Converter={StaticResource visibilityConverter}}"
+                                   FontSize="{StaticResource PhoneFontSizeMedium}" Style="{StaticResource TextLoadMore}"
+                                   Text="{Binding Path=R.no_data, Source={StaticResource R}}" />
+                        <ListBox ItemsSource="{Binding StaredArticles}" SelectionChanged="ArticleSelectionChanged"
+                                 ScrollViewer.VerticalScrollBarVisibility="Disabled" Tag="stared" Style="{StaticResource ListOfArticles}" />
+                        <Button BorderBrush="Transparent" Tag="STARED" Click="LoadButtonClick"
+                                Visibility="{Binding CanLoadStaredArticles,Converter={StaticResource visibilityConverter}}">
+                            <TextBlock Style="{StaticResource TextLoadMore}"
+                                       Text="{Binding Path=R.load_more_items, Source={StaticResource R}}" />
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </controls:PivotItem>
+        </controls:Pivot>
+    </Grid>
 
-  <!--Sample code showing usage of ApplicationBar-->
+    <!--Sample code showing usage of ApplicationBar-->
 
-  <phone:PhoneApplicationPage.Resources>
-    <shell:ApplicationBar x:Key="channelBar" IsVisible="True" IsMenuEnabled="True">
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/add.png" Text="add" Click="AddChannelClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
-      <shell:ApplicationBar.MenuItems>
-        <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
-      </shell:ApplicationBar.MenuItems>
-    </shell:ApplicationBar>
+    <phone:PhoneApplicationPage.Resources>
+        <shell:ApplicationBar x:Key="channelBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/add.png" Text="add" Click="AddChannelClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
+                <shell:ApplicationBarMenuItem Text="feedback" Click="LeaveFeedbackClick" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
 
-    <shell:ApplicationBar x:Key="allBar" IsVisible="True" IsMenuEnabled="True">
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/ApplicationBar.Select.png" Text="check_all"
-                                      Click="CheckClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
-      <shell:ApplicationBar.MenuItems>
-        <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
-      </shell:ApplicationBar.MenuItems>
-    </shell:ApplicationBar>
+        <shell:ApplicationBar x:Key="allBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/ApplicationBar.Select.png" Text="check_all"
+                                            Click="CheckClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
+                <shell:ApplicationBarMenuItem Text="feedback" Click="LeaveFeedbackClick" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
 
-    <shell:ApplicationBar x:Key="newBar" IsVisible="True" IsMenuEnabled="True">
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/ApplicationBar.Select.png" Text="check_all"
-                                      Click="CheckClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
-      <shell:ApplicationBar.MenuItems>
-        <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
-      </shell:ApplicationBar.MenuItems>
-    </shell:ApplicationBar>
+        <shell:ApplicationBar x:Key="newBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/ApplicationBar.Select.png" Text="check_all"
+                                            Click="CheckClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
+                <shell:ApplicationBarMenuItem Text="feedback" Click="LeaveFeedbackClick" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
 
-    <shell:ApplicationBar x:Key="staredBar" IsVisible="True" IsMenuEnabled="True">
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/favs.remove.png" Text="remove stars"
-                                      Click="CheckClick" />
-      <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
-      <shell:ApplicationBar.MenuItems>
-        <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
-      </shell:ApplicationBar.MenuItems>
-    </shell:ApplicationBar>
-  </phone:PhoneApplicationPage.Resources>
+        <shell:ApplicationBar x:Key="staredBar" IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/favs.remove.png" Text="remove stars" Click="CheckClick" />
+            <shell:ApplicationBarIconButton IconUri="/Toolkit.Content/sync.png" Text="refresh" Click="RefreshClick" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="setting" Click="NavigateToSetting" />
+                <shell:ApplicationBarMenuItem Text="feedback" Click="LeaveFeedbackClick" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.Resources>
 </phone:PhoneApplicationPage>

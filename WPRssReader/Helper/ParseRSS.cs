@@ -35,20 +35,37 @@ namespace WPRssReader.Helper
             var client = new WebClient();
 
             client.OpenReadCompleted += (sender, e) =>
-                                            {
-                                                if (e.Error != null)
-                                                {
-                                                    c.LastUpdate = Convert.ToDateTime("1901/01/01");
-                                                    return;
-                                                }
+                {
+                    if (e.Error != null)
+                    {
+                        c.LastUpdate = Convert.ToDateTime("1901/01/01");
+                        return;
+                    }
 
-                                                Stream str = e.Result;
-                                                Read(str, c, _model);
-                                                str.Close();
-                                                _model.SubmitChanges();
-                                                _model.RefreshArticles();
-                                            };
-            client.OpenReadAsync(new Uri(c.URL, UriKind.Absolute));
+                    var str = e.Result;
+                    try
+                    {
+                        Read(str, c, _model);
+                        _model.SubmitChanges();
+                        _model.RefreshArticles();
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+                    finally
+                    {
+                        str.Close();
+                    }
+                };
+            try
+            {
+                client.OpenReadAsync(new Uri(c.URL, UriKind.Absolute));
+            }
+            catch
+            {
+                App.ViewModel.DeleteChannel(c);
+            }
         }
 
         private void Read(Stream stream, Channel c, RssViewModel m)
@@ -65,13 +82,13 @@ namespace WPRssReader.Helper
                 atomReader.Close();
                 f = feedFormatter;
             }
-
-            if (rssFormater.CanRead(atomReader))
-            {
-                rssFormater.ReadFrom(atomReader);
-                atomReader.Close();
-                f = rssFormater;
-            }
+            else
+                if (rssFormater.CanRead(atomReader))
+                {
+                    rssFormater.ReadFrom(atomReader);
+                    atomReader.Close();
+                    f = rssFormater;
+                }
 
             if (f == null) return;
 
@@ -79,12 +96,12 @@ namespace WPRssReader.Helper
             c.Title = feed.Title.Text;
 
             Article[] articles = feed.Items.Select(item => new Article
-                                                               {
-                                                                   PubDate = item.PublishDate.DateTime,
-                                                                   Description = item.Summary.Text,
-                                                                   Link = item.Links[0].Uri.OriginalString,
-                                                                   Title = item.Title.Text,
-                                                               }).Select(art => m.AddArticle(art, c)).ToArray();
+                {
+                    PubDate = item.PublishDate.DateTime,
+                    Description = item.Summary.Text,
+                    Link = item.Links[0].Uri.OriginalString,
+                    Title = item.Title.Text,
+                }).Select(art => m.AddArticle(art, c)).ToArray();
             m.DeleteArticle(c.Articles.Where(x => !x.IsStared).Except(articles).ToArray(), c);
             c.LastUpdate = DateTime.Now;
         }

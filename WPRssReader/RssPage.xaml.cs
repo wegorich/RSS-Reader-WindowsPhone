@@ -41,29 +41,29 @@ namespace WPRssReader
             _action.Add(ApplicationBar.Buttons[3], NextArticle);
 
             _action.Add("all", () =>
-                                   {
-                                       if (App.ViewModel.CanLoadAllArticles)
-                                       {
-                                           App.ViewModel.LoadNextAllArticles();
-                                           _next.IsEnabled = true;
-                                       }
-                                   });
+                {
+                    if (App.ViewModel.CanLoadAllArticles)
+                    {
+                        App.ViewModel.LoadNextAllArticles();
+                        _next.IsEnabled = true;
+                    }
+                });
             _action.Add("new", () =>
-                                   {
-                                       if (App.ViewModel.CanLoadNewArticles)
-                                       {
-                                           App.ViewModel.LoadNextNewArticles();
-                                           _next.IsEnabled = true;
-                                       }
-                                   });
+                {
+                    if (App.ViewModel.CanLoadNewArticles)
+                    {
+                        App.ViewModel.LoadNextNewArticles();
+                        _next.IsEnabled = true;
+                    }
+                });
             _action.Add("stared", () =>
-                                      {
-                                          if (App.ViewModel.CanLoadStaredArticles)
-                                          {
-                                              App.ViewModel.LoadNextStaredArticles();
-                                              _next.IsEnabled = true;
-                                          }
-                                      });
+                {
+                    if (App.ViewModel.CanLoadStaredArticles)
+                    {
+                        App.ViewModel.LoadNextStaredArticles();
+                        _next.IsEnabled = true;
+                    }
+                });
             _action.Add("channel", () => { });
 
             //cos ApplicationBarIconButton doesn`t have binding at all
@@ -165,12 +165,12 @@ namespace WPRssReader
             if (App.ViewModel.Article == null) return;
 
             var web = new WebBrowserTask
-                          {
-                              Uri =
-                                  App.ViewModel.Article.Link != null
-                                      ? new Uri(App.ViewModel.Article.Link, UriKind.Absolute)
-                                      : null
-                          };
+                {
+                    Uri =
+                        App.ViewModel.Article.Link != null
+                            ? new Uri(App.ViewModel.Article.Link, UriKind.Absolute)
+                            : null
+                };
             web.Show();
         }
 

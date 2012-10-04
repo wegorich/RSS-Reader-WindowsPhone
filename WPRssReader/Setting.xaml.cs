@@ -1,8 +1,6 @@
-﻿using Microsoft.Phone.Controls;
-
-namespace WPRssReader
+﻿namespace WPRssReader
 {
-    public partial class Setting : PhoneApplicationPage
+    public partial class Setting
     {
         private readonly int[] _itemsCount = {25, 50, 75, 100};
 
@@ -11,6 +9,11 @@ namespace WPRssReader
             InitializeComponent();
             DataContext = App.Settings;
             listPicker.ItemsSource = _itemsCount;
+        }
+
+        private void LeaveFeedbackClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            App.LeaveFeedback();
         }
     }
 }

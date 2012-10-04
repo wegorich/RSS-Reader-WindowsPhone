@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace WPRssReader
         private readonly Command _addChannelCommand;
 
         private readonly ParseRss _parseRss;
-        private readonly Command _refreshCommand;
         private readonly BaseDataContext _rssDb;
 
         public string Accent;
@@ -82,7 +82,7 @@ namespace WPRssReader
         //All articles
         public int NewCount
         {
-            get { return _rssDb.Articles.Where(x => !x.IsRead).Count(); }
+            get { return _rssDb.Articles.Count(x => !x.IsRead); }
         }
 
         public ObservableCollection<Article> AllArticles
@@ -134,12 +134,12 @@ namespace WPRssReader
 
         public bool CanLoadNewArticles
         {
-            get { return NewArticles.Count < _rssDb.Articles.Where(x => !x.IsRead).Count(); }
+            get { return NewArticles.Count < _rssDb.Articles.Count(x => !x.IsRead); }
         }
 
         public bool CanLoadStaredArticles
         {
-            get { return StaredArticles.Count < _rssDb.Articles.Where(x => x.IsStared).Count(); }
+            get { return StaredArticles.Count < _rssDb.Articles.Count(x => x.IsStared); }
         }
 
         public void LoadNextAllArticles()
@@ -191,7 +191,7 @@ namespace WPRssReader
             Channels = new ObservableCollection<Channel>(_rssDb.Channels.OrderBy(x => x.Index));
             foreach (Channel c in Channels)
             {
-                c.NewCount = c.Articles.Where(x => !x.IsRead).Count();
+                c.NewCount = c.Articles.Count(x => !x.IsRead);
             }
         }
 
@@ -323,7 +323,7 @@ namespace WPRssReader
             ReadArticles(NewArticles);
         }
 
-        private void ReadArticles(ObservableCollection<Article> articles)
+        private void ReadArticles(IEnumerable<Article> articles)
         {
             foreach (Article art in articles.Where(x => x.IsRead == false))
             {
@@ -336,7 +336,6 @@ namespace WPRssReader
         /// <summary>
         /// The Command function.
         /// </summary>
-
         public void MoveChannelUp(Channel ch)
         {
             int index = Channels.IndexOf(ch) - 1;
@@ -415,8 +414,8 @@ namespace WPRssReader
                      "<script src='jquery.lazyload.js' type='text/javascript'></script>" +
                      "<script type='text/javascript'>" +
                      "$(function(){" +
-                        "$('*').lazyload();" +
-                        "$('img').css('width', '100%');"+
+                     "$('*').lazyload();" +
+                     "$('img').css('width', '100%');" +
                      "});</script>");
             b.Append("<style type='text/css'>" +
                      "*{" +
