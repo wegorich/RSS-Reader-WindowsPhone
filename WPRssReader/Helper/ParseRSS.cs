@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.ServiceModel.Syndication;
+using System.Text;
 using System.Xml;
 using WPRssReader.Model;
 
@@ -42,20 +43,17 @@ namespace WPRssReader.Helper
                         return;
                     }
 
-                    var str = e.Result;
+                    if (e.Result == null) return;
+
                     try
                     {
-                        Read(str, c, _model);
+                        Read(e.Result, c, _model);
                         _model.SubmitChanges();
                         _model.RefreshArticles();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         return;
-                    }
-                    finally
-                    {
-                        str.Close();
                     }
                 };
             try
@@ -68,34 +66,29 @@ namespace WPRssReader.Helper
             }
         }
 
-        private void Read(Stream stream, Channel c, RssViewModel m)
+        private void Read(Stream content, Channel c, RssViewModel m)
         {
-            var feedFormatter = new Atom10FeedFormatter();
-            var rssFormater = new Rss20FeedFormatter();
+            var ecoding = new MSPToolkit.Encodings.Windows1251Encoding();
+            var xml = new StreamReader(content, ecoding).ReadToEnd();
+            //if (xml.Contains("encoding=\"windows-1251\""))
+            //{
+            //xml = new StreamReader(content, ecoding).ReadToEnd();
+            xml = xml.Replace("encoding=\"windows-1251\"", "encoding=\"utf-8\"");
+                
+            //}
+            
 
-            XmlReader atomReader = XmlReader.Create(stream);
-            SyndicationFeedFormatter f = null;
+            xml = xml.Replace("<lastBuildDate></lastBuildDate>", "");
+            var b = Encoding.UTF8.GetBytes(xml);
 
-            if (feedFormatter.CanRead(atomReader))
-            {
-                feedFormatter.ReadFrom(atomReader);
-                atomReader.Close();
-                f = feedFormatter;
-            }
-            else
-                if (rssFormater.CanRead(atomReader))
-                {
-                    rssFormater.ReadFrom(atomReader);
-                    atomReader.Close();
-                    f = rssFormater;
-                }
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment, IgnoreWhitespace = true, IgnoreComments = true};
+            var reader = XmlReader.Create(new MemoryStream(b), settings);
+            var feed = SyndicationFeed.Load(reader);
 
-            if (f == null) return;
-
-            SyndicationFeed feed = f.Feed;
+            if (feed == null) return;
             c.Title = feed.Title.Text;
 
-            Article[] articles = feed.Items.Select(item => new Article
+            var articles = feed.Items.Select(item => new Article
                 {
                     PubDate = item.PublishDate.DateTime,
                     Description = item.Summary.Text,

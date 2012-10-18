@@ -30,7 +30,7 @@ namespace WPRssReader
             }
             try
             {
-                App.ViewModel.AddChannelCommand.DoExecute(address);
+                App.ViewModel.AddChannelCommand.DoExecute("http://bashorg.org/rss.xml");//address);
                 MessageBox.Show(AppResources.add_message);
             }
             catch (Exception)
