@@ -20,6 +20,7 @@ namespace WPRssReader.Helper
         private const string RexForEncoding = "encoding=\".*\"";
         private const string RemoveLastBuildDate = "<lastBuildDate></lastBuildDate>";
         private const string MinDBTime = "1900/01/01";
+        private const string MinDBUpdated = "1901/01/01";
 
         private readonly RssViewModel _model;
 
@@ -47,13 +48,11 @@ namespace WPRssReader.Helper
 
             client.OpenReadCompleted += (sender, e) =>
                 {
-                    if (e.Error != null)
+                    if (e.Error != null||e.Result == null)
                     {
-                        c.LastUpdate = Convert.ToDateTime(MinDBTime);
+                        c.LastUpdate = Convert.ToDateTime(MinDBUpdated);
                         return;
                     }
-
-                    if (e.Result == null) return;
 
                     try
                     {
@@ -67,6 +66,7 @@ namespace WPRssReader.Helper
                         toast.MillisecondsUntilHidden = 1500;
                         toast.Message = AppResources.add_message_error;
                         toast.Show();
+                        c.LastUpdate = Convert.ToDateTime(MinDBUpdated);
                         return;
                     }
                 };

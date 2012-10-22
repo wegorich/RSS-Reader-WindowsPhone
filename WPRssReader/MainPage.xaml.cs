@@ -99,6 +99,14 @@ namespace WPRssReader
             ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
         }
 
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            while (this.NavigationService.BackStack.Any())
+            {
+                this.NavigationService.RemoveBackEntry();
+            }
+        }
+
         private void AddChannelClick(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/AddChanel.xaml", UriKind.Relative));
@@ -228,6 +236,6 @@ namespace WPRssReader
                 emailcomposer.Body = String.Format(AppResources.email_body, e.DisplayName, strBuild.ToString());
                 emailcomposer.Show();
             }
-        }
+        }        
     }
 }

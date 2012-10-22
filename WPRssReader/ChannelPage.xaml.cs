@@ -19,34 +19,42 @@ namespace WPRssReader
 
             DataContext = App.ViewModel;
 
-            _preview = (ApplicationBarIconButton) ApplicationBar.Buttons[0];
-            _next = (ApplicationBarIconButton) ApplicationBar.Buttons[2];
+            _preview = (ApplicationBarIconButton)ApplicationBar.Buttons[0];
+            _next = (ApplicationBarIconButton)ApplicationBar.Buttons[2];
             //cos ApplicationBarIconButton doesn`t have binding at all
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[0]).Text = AppResources.preview;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[1]).Text = AppResources.check_all;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[2]).Text = AppResources.next;
-
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).Text = AppResources.preview;
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[1]).Text = AppResources.check_all;
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[2]).Text = AppResources.next;
             MenuItemVisibility();
         }
 
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            this.NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+        }
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!NavigationContext.QueryString.ContainsKey("ID")) return;
+            base.OnNavigatedTo(e);
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                if (!NavigationContext.QueryString.ContainsKey("ID")) return;
 
-            int id;
-            int.TryParse(NavigationContext.QueryString["ID"], out id);
+                int id;
+                int.TryParse(NavigationContext.QueryString["ID"], out id);
 
-            App.ViewModel.Channel = App.ViewModel.Channels.FirstOrDefault(x => x.ID == id);
-            App.ViewModel.UpdateChannel(App.ViewModel.Channel);
+                App.ViewModel.Channel = App.ViewModel.Channels.FirstOrDefault(x => x.ID == id);
+                App.ViewModel.UpdateChannel(App.ViewModel.Channel);
+            }
         }
 
         private void ArticleSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
 
-            App.ViewModel.Article = (Article) e.AddedItems[0];
+            App.ViewModel.Article = (Article)e.AddedItems[0];
             NavigationService.Navigate(new Uri("/RssPage.xaml?val=channel", UriKind.Relative));
-            ((ListBox) sender).SelectedItem = null;
+            ((ListBox)sender).SelectedItem = null;
         }
 
         private void CheckAllClick(object sender, EventArgs e)
