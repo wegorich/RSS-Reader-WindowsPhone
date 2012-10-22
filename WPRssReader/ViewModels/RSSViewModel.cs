@@ -424,6 +424,9 @@ namespace WPRssReader
             b.Append(";color:");
             b.Append(Foreground);
             b.Append(";}" +
+                     "img {"+
+                     "border-style: none;"+
+                     "}"+
                      "a {" +
                      "color:");
             b.Append(Accent);

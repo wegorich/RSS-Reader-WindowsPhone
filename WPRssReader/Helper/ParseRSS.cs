@@ -6,11 +6,21 @@ using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
 using WPRssReader.Model;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using Coding4Fun.Phone.Controls;
+using WPRssReader.Resources;
 
 namespace WPRssReader.Helper
 {
     public class ParseRss
     {
+        private const string EncodedUTF8 = "encoding=\"utf-8\"";
+        private const int LengthOfEnc = 10;// "encoding=\"".Length;
+        private const string RexForEncoding = "encoding=\".*\"";
+        private const string RemoveLastBuildDate = "<lastBuildDate></lastBuildDate>";
+        private const string MinDBTime = "1900/01/01";
+
         private readonly RssViewModel _model;
 
         public ParseRss(RssViewModel model)
@@ -32,14 +42,14 @@ namespace WPRssReader.Helper
                 if (now.Minute == last.Minute && (now - last).TotalMinutes < 5) return;
             }
 
-            c.LastUpdate = Convert.ToDateTime("1900/01/01");
+            c.LastUpdate = Convert.ToDateTime(MinDBTime);
             var client = new WebClient();
 
             client.OpenReadCompleted += (sender, e) =>
                 {
                     if (e.Error != null)
                     {
-                        c.LastUpdate = Convert.ToDateTime("1901/01/01");
+                        c.LastUpdate = Convert.ToDateTime(MinDBTime);
                         return;
                     }
 
@@ -47,12 +57,16 @@ namespace WPRssReader.Helper
 
                     try
                     {
-                        Read(e.Result, c, _model);
+                        Read(GetEncodedString(e.Result), c, _model);
                         _model.SubmitChanges();
                         _model.RefreshArticles();
                     }
                     catch (Exception ex)
                     {
+                        ToastPrompt toast = new ToastPrompt();
+                        toast.MillisecondsUntilHidden = 1500;
+                        toast.Message = AppResources.add_message_error;
+                        toast.Show();
                         return;
                     }
                 };
@@ -63,27 +77,28 @@ namespace WPRssReader.Helper
             catch
             {
                 App.ViewModel.DeleteChannel(c);
+                var toast = new ToastPrompt{
+                                             MillisecondsUntilHidden = 1500,
+                                             Message = AppResources.channel_removed
+                                           };
+                toast.Show();
             }
         }
 
-        private void Read(Stream content, Channel c, RssViewModel m)
+        private void Read(string xml, Channel c, RssViewModel m)
         {
-            var ecoding = new MSPToolkit.Encodings.Windows1251Encoding();
-            var xml = new StreamReader(content, ecoding).ReadToEnd();
-            //if (xml.Contains("encoding=\"windows-1251\""))
-            //{
-            //xml = new StreamReader(content, ecoding).ReadToEnd();
-            xml = xml.Replace("encoding=\"windows-1251\"", "encoding=\"utf-8\"");
-                
-            //}
-            
+            xml = xml.Replace(RemoveLastBuildDate, String.Empty);
 
-            xml = xml.Replace("<lastBuildDate></lastBuildDate>", "");
             var b = Encoding.UTF8.GetBytes(xml);
 
-            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment, IgnoreWhitespace = true, IgnoreComments = true};
-            var reader = XmlReader.Create(new MemoryStream(b), settings);
-            var feed = SyndicationFeed.Load(reader);
+            var settings = new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                IgnoreWhitespace = true,
+                IgnoreComments = true
+            };
+
+            var feed = SyndicationFeed.Load(XmlReader.Create(new MemoryStream(b), settings));
 
             if (feed == null) return;
             c.Title = feed.Title.Text;
@@ -91,12 +106,33 @@ namespace WPRssReader.Helper
             var articles = feed.Items.Select(item => new Article
                 {
                     PubDate = item.PublishDate.DateTime,
-                    Description = item.Summary.Text,
+                    //The reason for the 8,060-byte limit 
+                    Description = item.Summary.Text.Length < 1000 ? item.Summary.Text : item.Summary.Text.Substring(0, 1000),
                     Link = item.Links[0].Uri.OriginalString,
                     Title = item.Title.Text,
                 }).Select(art => m.AddArticle(art, c)).ToArray();
+
             m.DeleteArticle(c.Articles.Where(x => !x.IsStared).Except(articles).ToArray(), c);
             c.LastUpdate = DateTime.Now;
+        }
+
+        private string GetEncodedString(Stream content)
+        {
+            var bytes = new byte[content.Length];
+            content.Read(bytes, 0, bytes.Length);
+            var xml = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            var match = Regex.Match(xml, RexForEncoding, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                var enc = match.Value;
+                var encoding = MSPToolkit.Encodings.BaseSingleByteEncoding.GetEncoding(enc.Substring(LengthOfEnc, enc.Length - LengthOfEnc - 1));//-1 last "
+                if (encoding != null)
+                {
+                    xml = encoding.GetString(bytes, 0, bytes.Length);
+                }
+                xml = xml.Replace(enc, EncodedUTF8);
+            }
+            return xml;
         }
     }
 }

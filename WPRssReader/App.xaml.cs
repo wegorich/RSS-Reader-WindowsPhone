@@ -13,6 +13,7 @@ using Microsoft.Phone.Tasks;
 using WPRssReader.Helper;
 using WPRssReader.Model;
 using WPRssReader.Resources;
+using MSPToolkit.Utilities;
 
 namespace WPRssReader
 {
@@ -149,14 +150,8 @@ namespace WPRssReader
 
             // Ensure that required application state is persisted here.
             ShellTile apptile = ShellTile.ActiveTiles.First();
-            var appTileData = new StandardTileData
-                {
-                    Count = ViewModel.NewCount,
-                    BackTitle = AppResources.tile_title,
-                    BackContent = AppResources.tile_content
-                };
-
-            apptile.Update(appTileData);
+            
+            apptile.Update(AddTile(ViewModel.NewCount, "first"));
 
             foreach (Channel c in ViewModel.Channels)
             {
@@ -166,28 +161,31 @@ namespace WPRssReader
                 // If the Tile was found, then update the background image.
                 if (tileToFind != null)
                 {
-                    StandardTileData secTileData = c.NewCount <= 0
-                                                       ? new StandardTileData
-                                                           {
-                                                               Title = c.Title,
-                                                               Count = c.NewCount,
-                                                               BackgroundImage =
-                                                                   new Uri("/Background.png",
-                                                                           UriKind.RelativeOrAbsolute),
-                                                               BackTitle = AppResources.tile_title,
-                                                               BackContent = c.Title
-                                                           }
-                                                       : new StandardTileData
-                                                           {
-                                                               Title = c.Title,
-                                                               BackgroundImage =
-                                                                   new Uri("/Background.png",
-                                                                           UriKind.RelativeOrAbsolute)
-                                                           };
-
-                    tileToFind.Update(secTileData);
+                    tileToFind.Update( AddTile(c.NewCount,c.ID.ToString(),c.Title));
                 }
             }
+        }
+
+        public static StandardTileData AddTile(int count,string id,string title=null)
+        {
+            StandardTileData secTileData = count > 0
+                                               ? new StandardTileData
+                                               {
+                                                   Title = title,
+                                                   BackgroundImage = TileImageGenerator.GenerateTile(
+                                                                           new Uri("Background.png", UriKind.Relative),
+                                                                           (uint)count,
+                                                                           String.Format("TileImage{0}", id))
+                                               }
+
+                                               : new StandardTileData
+                                               {
+                                                   Title = title,
+                                                   BackgroundImage =
+                                                       new Uri("Background.png",
+                                                               UriKind.Relative)
+                                               };
+            return secTileData;
         }
 
         // Code to execute if a navigation fails

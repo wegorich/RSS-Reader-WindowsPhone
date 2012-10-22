@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using WPRssReader.Resources;
+using Coding4Fun.Phone.Controls;
 
 namespace WPRssReader
 {
@@ -13,29 +14,36 @@ namespace WPRssReader
             InitializeComponent();
             DataContext = App.ViewModel;
             //cos ApplicationBarIconButton doesn`t have binding at all
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[0]).Text = AppResources.add_save;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[1]).Text = AppResources.add_search;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[2]).Text = AppResources.add_cancel;
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).Text = AppResources.add_save;
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[1]).Text = AppResources.add_search;
+            ((ApplicationBarIconButton)ApplicationBar.Buttons[2]).Text = AppResources.add_cancel;
         }
 
         private void SaveClick(object sender, EventArgs e)
         {
             string address = RssLink.Text;
+
+            ToastPrompt toast = new ToastPrompt();
+            toast.MillisecondsUntilHidden = 1500;
+
             if (String.IsNullOrEmpty(address) || address.Equals("about:blank") ||
                 !(address.Length > 7 && address.StartsWith("http://") ||
                   address.Length > 8 && address.StartsWith("https://")))
             {
-                MessageBox.Show(AppResources.add_message_error);
+                toast.Message = AppResources.add_message_error;
+                toast.Show();
                 return;
             }
             try
             {
-                App.ViewModel.AddChannelCommand.DoExecute("http://bashorg.org/rss.xml");//address);
-                MessageBox.Show(AppResources.add_message);
+                App.ViewModel.AddChannelCommand.DoExecute(address);
+                toast.Message = AppResources.add_message;
+                toast.Show();
             }
             catch (Exception)
             {
-                MessageBox.Show(AppResources.add_message_error);
+                toast.Message = AppResources.add_message_error;
+                toast.Show();
             }
         }
 

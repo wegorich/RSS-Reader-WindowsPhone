@@ -24,7 +24,7 @@ namespace WPRssReader
         private readonly ApplicationBarIconButton _stared;
         private ObservableCollection<Article> _list;
         private string _value;
-
+        private bool _isNavigationg = false;
         public RssPage()
         {
             InitializeComponent();
@@ -36,7 +36,7 @@ namespace WPRssReader
             _next = (ApplicationBarIconButton) ApplicationBar.Buttons[3];
 
             _action.Add(ApplicationBar.Buttons[0], PreviewArticle);
-            _action.Add(ApplicationBar.Buttons[1], ShowArticleInBrowser);
+            _action.Add(ApplicationBar.Buttons[1], ()=>ShowArticleInBrowser(App.ViewModel.Article.Link));
             _action.Add(ApplicationBar.Buttons[2], AddOrRemoveStar);
             _action.Add(ApplicationBar.Buttons[3], NextArticle);
 
@@ -102,11 +102,12 @@ namespace WPRssReader
         {
             var element = (WebBrowser) sender;
             element.Visibility = Visibility.Visible;
+            _isNavigationg = false;
         }
 
         private void ArticleDoubleTap(object sender, GestureEventArgs e)
         {
-            ShowArticleInBrowser();
+            ShowArticleInBrowser(App.ViewModel.Article.Link);
         }
 
         private void MenuItemVisibility()
@@ -137,6 +138,7 @@ namespace WPRssReader
 
         private void BrowserNavigate()
         {
+            _isNavigationg = true;
             const string fileName = "index.html";
             if (App.ViewModel.BuildHTML(App.ViewModel.Article.Description, fileName))
             {
@@ -160,15 +162,14 @@ namespace WPRssReader
             MenuItemVisibility();
         }
 
-        private void ShowArticleInBrowser()
+        private void ShowArticleInBrowser(string url)
         {
             if (App.ViewModel.Article == null) return;
 
             var web = new WebBrowserTask
                 {
-                    Uri =
-                        App.ViewModel.Article.Link != null
-                            ? new Uri(App.ViewModel.Article.Link, UriKind.Absolute)
+                    Uri = url != null
+                            ? new Uri(url, UriKind.Absolute)
                             : null
                 };
             web.Show();
@@ -201,5 +202,15 @@ namespace WPRssReader
         }
 
         #endregion
+
+        private void Browser_Navigating(object sender, NavigatingEventArgs e)
+        {
+            if (!_isNavigationg)
+            {
+                ShowArticleInBrowser(e.Uri.OriginalString);
+                e.Cancel = true;
+            }
+
+        }
     }
 }

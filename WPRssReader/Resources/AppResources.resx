@@ -145,6 +145,9 @@ or copy/paste from browser</value>
   <data name="add_star" xml:space="preserve">
     <value>Add star</value>
   </data>
+  <data name="channel_removed" xml:space="preserve">
+    <value>Channel was removed</value>
+  </data>
   <data name="check_all" xml:space="preserve">
     <value>All read</value>
   </data>
@@ -162,6 +165,12 @@ or copy/paste from browser</value>
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Updating... Please wait.</value>
+  </data>
+  <data name="email_body" xml:space="preserve">
+    <value>Hi {0}!That news would be interested for you {1}Have fun from RSS joy program</value>
+  </data>
+  <data name="email_title" xml:space="preserve">
+    <value>Best news from fiend!</value>
   </data>
   <data name="feedback" xml:space="preserve">
     <value>feedback</value>
@@ -223,6 +232,12 @@ or copy/paste from browser</value>
   <data name="remove_stars" xml:space="preserve">
     <value>Remove stars</value>
   </data>
+  <data name="send_email" xml:space="preserve">
+    <value>Send best by email</value>
+  </data>
+  <data name="send_email_error" xml:space="preserve">
+    <value>An error occurred while email sending</value>
+  </data>
   <data name="setting" xml:space="preserve">
     <value>Setting</value>
   </data>
@@ -240,6 +255,9 @@ or copy/paste from browser</value>
   </data>
   <data name="setting_name" xml:space="preserve">
     <value>SETTINGS</value>
+  </data>
+  <data name="sync_error" xml:space="preserve">
+    <value>Synchronization error</value>
   </data>
   <data name="tile_content" xml:space="preserve">
     <value>Could you read? :)</value>

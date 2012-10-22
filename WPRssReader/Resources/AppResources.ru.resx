@@ -145,6 +145,9 @@
   <data name="add_star" xml:space="preserve">
     <value>Добавить звезду</value>
   </data>
+  <data name="channel_removed" xml:space="preserve">
+    <value>Канал был удален</value>
+  </data>
   <data name="check_all" xml:space="preserve">
     <value>Прочитать все</value>
   </data>
@@ -162,6 +165,12 @@
   </data>
   <data name="date_updating" xml:space="preserve">
     <value>Обновляю... Пожалуйста подождите.</value>
+  </data>
+  <data name="email_body" xml:space="preserve">
+    <value>Привет {0}! Это новости, которые будут тебе интересны {1}Отдыхай и раслабляйся с RSS joy</value>
+  </data>
+  <data name="email_title" xml:space="preserve">
+    <value>Лучшие новости для тебя!</value>
   </data>
   <data name="feedback" xml:space="preserve">
     <value>отзывы</value>
@@ -226,6 +235,12 @@
   <data name="remove_stars" xml:space="preserve">
     <value>Забрать звезды</value>
   </data>
+  <data name="send_email" xml:space="preserve">
+    <value>Отправить лучшие</value>
+  </data>
+  <data name="send_email_error" xml:space="preserve">
+    <value>Произошла ошибка отправки сообщения</value>
+  </data>
   <data name="setting" xml:space="preserve">
     <value>Настройки</value>
   </data>
@@ -244,10 +259,13 @@
   <data name="setting_name" xml:space="preserve">
     <value>НАСТРОЙКИ</value>
   </data>
+  <data name="sync_error" xml:space="preserve">
+    <value>Ошбика синхронизации</value>
+  </data>
   <data name="tile_content" xml:space="preserve">
     <value>Прочитай ка их :)</value>
   </data>
   <data name="tile_title" xml:space="preserve">
-    <value>Навые статьи</value>
+    <value>Новые статьи</value>
   </data>
 </root>

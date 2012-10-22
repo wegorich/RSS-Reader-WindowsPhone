@@ -36,7 +36,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="{Binding Path=R.copyright, Source={StaticResource R}}" Style="{StaticResource PhoneTextTitle3Style}" TextWrapping="Wrap"/>
-                    <TextBlock Grid.Row="1" Text="Version 1.3.0.0000" Style="{StaticResource PhoneTextSubtleStyle}" TextWrapping="Wrap"/>
+                    <TextBlock Grid.Row="1" Text="Version 1.4.0.0000" Style="{StaticResource PhoneTextSubtleStyle}" TextWrapping="Wrap"/>
                     <TextBlock Grid.Row="2" Text="{Binding Path=R.contact_me, Source={StaticResource R}}" Style="{StaticResource PhoneTextAccentStyle}" TextWrapping="Wrap"/>
                     <Button Grid.Row="3" Click="LeaveFeedbackClick" Content="{Binding Path=R.leave_feedback, Source={StaticResource R}}" ></Button>
                 </Grid>

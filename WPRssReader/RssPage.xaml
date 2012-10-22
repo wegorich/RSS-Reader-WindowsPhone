@@ -29,7 +29,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1">
-            <phone:WebBrowser x:Name="Browser" LoadCompleted="WebBrowserNavigated" IsScriptEnabled="True" />
+            <phone:WebBrowser x:Name="Browser" LoadCompleted="WebBrowserNavigated" IsScriptEnabled="True" Navigating="Browser_Navigating" />
         </Grid>
     </Grid>
     <!--Sample code showing usage of ApplicationBar-->

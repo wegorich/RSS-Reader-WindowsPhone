@@ -7,6 +7,10 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using WPRssReader.Model;
 using WPRssReader.Resources;
+using MSPToolkit.Utilities;
+using Microsoft.Phone.Tasks;
+using System.Text;
+using Coding4Fun.Phone.Controls;
 
 namespace WPRssReader
 {
@@ -64,28 +68,35 @@ namespace WPRssReader
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
 
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
-            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.feedback;
+            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
+            ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
 
+            //all
             appBar = (ApplicationBar)Resources[_appBars[1]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.check_all;
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
 
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
-            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.feedback;
+            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
+            ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
 
+            //new
             appBar = (ApplicationBar)Resources[_appBars[2]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.check_all;
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
 
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
-            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.feedback;
+            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
+            ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
 
+            //starred
             appBar = (ApplicationBar)Resources[_appBars[3]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.remove_stars;
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
 
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
-            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.feedback;
+            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
+            ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
         }
 
         private void AddChannelClick(object sender, EventArgs e)
@@ -130,17 +141,8 @@ namespace WPRssReader
         {
             string url = string.Format("/ChannelPage.xaml?ID={0}", channel.ID);
             ShellTile tileToFind = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains(url));
-
-            var secTileData = new StandardTileData
-                {
-                    Title = channel.Title,
-                    Count = channel.NewCount,
-                    BackgroundImage = new Uri("/Background.png", UriKind.RelativeOrAbsolute),
-                    BackTitle = "Not read articles",
-                    BackContent = channel.Title
-                };
-
-
+            var secTileData = App.AddTile(channel.NewCount, channel.ID.ToString(), channel.Title);
+            
             // If the Tile was found, then update the background image.
             if (tileToFind != null)
             {
@@ -183,6 +185,49 @@ namespace WPRssReader
         private void LeaveFeedbackClick(object sender, EventArgs e)
         {
             App.LeaveFeedback();
+        }
+
+        private void ChooseEmailClick(object sender, EventArgs e)
+        {
+            EmailAddressChooserTask emailAddressChooserTask;
+            emailAddressChooserTask = new EmailAddressChooserTask();
+            emailAddressChooserTask.Completed += new EventHandler<EmailResult>(EmailAddressChooserTaskCompleted);
+
+            try
+            {
+                emailAddressChooserTask.Show();
+            }
+            catch (System.InvalidOperationException ex)
+            {
+                var toast = new ToastPrompt
+                {
+                    MillisecondsUntilHidden = 1500,
+                    Message = AppResources.channel_removed
+                };
+                toast.Show();
+            }
+        }
+        void EmailAddressChooserTaskCompleted(object sender, EmailResult e)
+        {
+            if (e.TaskResult == TaskResult.OK)
+            {
+                //Code to send a new email message using the retrieved email address.
+                EmailComposeTask emailcomposer = new EmailComposeTask();
+                var strBuild = new StringBuilder().Append("\n\r\n");
+
+                foreach (var article in App.ViewModel.StaredArticles)
+                {
+                    strBuild.Append(article.Link).Append(" \n")
+                        .Append(article.Description)
+                                .Append("\n\r");
+                }
+                strBuild.Append("\n\r\n");
+
+                emailcomposer.To = e.Email;
+                emailcomposer.Subject = AppResources.email_title;
+                emailcomposer.Body = String.Format(AppResources.email_body, e.DisplayName, strBuild.ToString());
+                emailcomposer.Show();
+            }
         }
     }
 }
