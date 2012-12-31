@@ -40,6 +40,10 @@ namespace WPRssReader.Helper
             throw new NotImplementedException();
         }
 
+        public object ToUserFriendlyString(object value)
+        {
+            return Convert(value, typeof(string), null, CultureInfo.CurrentCulture);
+        }
         #endregion
     }
 }

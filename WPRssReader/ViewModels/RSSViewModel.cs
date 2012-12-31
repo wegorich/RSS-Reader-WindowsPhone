@@ -7,6 +7,8 @@ using System.Text;
 using Apex.MVVM;
 using WPRssReader.Helper;
 using WPRssReader.Model;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace WPRssReader
 {
@@ -14,6 +16,7 @@ namespace WPRssReader
     {
         public static int SelectCount = 25;
         private readonly Command _addChannelCommand;
+        public static readonly DateConvertor DateConvertor = new DateConvertor();
 
         private readonly ParseRss _parseRss;
         private readonly BaseDataContext _rssDb;
@@ -21,6 +24,8 @@ namespace WPRssReader
         public string Accent;
         public string Background;
         public string Foreground;
+
+        private string _search;
 
         private ObservableCollection<Article> _allArticles;
         private Article _article;
@@ -68,6 +73,16 @@ namespace WPRssReader
                 NotifyPropertyChanged("Article");
             }
         }
+        private ObservableCollection<Channel> _channelsNavList;
+        public ObservableCollection<Channel> ChannelsNavList
+        {
+            get { return _channelsNavList; }
+            set
+            {
+                _channelsNavList = value;
+                NotifyPropertyChanged("ChannelsNavList");
+            }
+        }
 
         public ObservableCollection<Channel> Channels
         {
@@ -83,6 +98,19 @@ namespace WPRssReader
         public int NewCount
         {
             get { return _rssDb.Articles.Count(x => !x.IsRead); }
+        }
+
+        public string Search
+        {
+            get { return _search!=null?_search:string.Empty; }
+            set
+            {
+                if (value == _search) return;
+                
+                _search = value;
+                NotifyPropertyChanged("Search");
+                RefreshAll();
+            }
         }
 
         public ObservableCollection<Article> AllArticles
@@ -129,7 +157,7 @@ namespace WPRssReader
 
         public bool CanLoadAllArticles
         {
-            get { return AllArticles.Count < _rssDb.Articles.Count(); }
+            get { return AllArticles.Count < _rssDb.Articles.Where(x=>x.Title.Contains(Search)).Count(); }
         }
 
         public bool CanLoadNewArticles
@@ -144,8 +172,8 @@ namespace WPRssReader
 
         public void LoadNextAllArticles()
         {
-            IOrderedQueryable<Article> articlesInDb = _rssDb.Articles.OrderByDescending(x => x.PubDate);
-            foreach (Article a in articlesInDb.Skip(AllArticles.Count).Take(SelectCount))
+            IOrderedQueryable<Article> articlesInDb = _rssDb.Articles.OrderByDescending(x => x.AddDate);
+            foreach (Article a in articlesInDb.Where(x=>x.Title.Contains(Search)).Skip(AllArticles.Count).Take(SelectCount))
             {
                 AllArticles.Add(a);
             }
@@ -155,7 +183,7 @@ namespace WPRssReader
         public void LoadNextNewArticles()
         {
             IOrderedQueryable<Article> articlesInDb =
-                _rssDb.Articles.Where(x => !x.IsRead).OrderByDescending(x => x.PubDate);
+                _rssDb.Articles.Where(x => !x.IsRead).OrderByDescending(x => x.AddDate);
             foreach (Article a in articlesInDb.Skip(NewArticles.Count).Take(SelectCount))
             {
                 NewArticles.Add(a);
@@ -280,7 +308,11 @@ namespace WPRssReader
         #region Functions
 
         #region Refresh
-
+        public void RefreshChannel(Channel ch)
+        {
+           UpdateChannel(ch);
+           RefreshArticles();
+        }
         public void RefreshAll()
         {
             SaveChangesToDb();
@@ -312,6 +344,10 @@ namespace WPRssReader
         #endregion
 
         #region Read all
+        public void ReadRealAll()
+        {
+            ReadArticles(_rssDb.Articles);
+        }
 
         public void ReadAll()
         {
@@ -336,31 +372,27 @@ namespace WPRssReader
         /// <summary>
         /// The Command function.
         /// </summary>
-        public void MoveChannelUp(Channel ch)
+        public void MoveChannel(Channel ch, int indexTo)
         {
-            int index = Channels.IndexOf(ch) - 1;
-            if (index < 0) return;
+            int index = Channels.IndexOf(ch);
+
+            if (index == indexTo || index == Channels.Count || index < 0)
+            {
+                return;
+            }
+
+            //indexTo = (index < indexTo) ? indexTo-1 : indexTo;
 
             Channels.Remove(ch);
-            Channels.Insert(index, ch);
-            ch.Index = index;
-        }
-
-        public void MoveChannelDown(Channel ch)
-        {
-            int index = Channels.IndexOf(ch) + 1;
-            if (index == Channels.Count) return;
-
-            Channels.Remove(ch);
-            Channels.Insert(index, ch);
-            ch.Index = index;
+            Channels.Insert(indexTo, ch);
+            ch.Index = indexTo;
         }
 
         private void DoAddChanel(object data)
         {
             var rss = data as string;
             if (String.IsNullOrEmpty(rss)) return;
-            var c = new Channel {URL = rss, Title = rss};
+            var c = new Channel { URL = rss, Title = rss };
             c = AddChannel(c) ? c : Channels.First(x => x.URL == c.URL);
             _parseRss.AddChannel(c);
         }
@@ -386,74 +418,9 @@ namespace WPRssReader
         {
             foreach (Channel ch in Channels)
             {
-                _parseRss.GetArticles(ch);
+                UpdateChannel(ch);
             }
             RefreshArticles();
-        }
-
-        public static string ConvertExtendedAscii(string html)
-        {
-            string retVal = "";
-            char[] s = html.ToCharArray();
-
-            foreach (char c in s)
-            {
-                if (Convert.ToInt32(c) > 127)
-                    retVal += "&#" + Convert.ToInt32(c) + ";";
-                else
-                    retVal += c;
-            }
-
-            return retVal;
-        }
-
-        public bool BuildHTML(string description, string fileName)
-        {
-            var b = new StringBuilder();
-            b.Append("<script src='jquery.js' type='text/javascript'></script>" +
-                     "<script src='jquery.lazyload.js' type='text/javascript'></script>" +
-                     "<script type='text/javascript'>" +
-                     "$(function(){" +
-                     "$('*').lazyload();" +
-                     "$('img').css('width', '100%');" +
-                     "});</script>");
-            b.Append("<style type='text/css'>" +
-                     "*{" +
-                     "background:");
-            b.Append(Background);
-            b.Append(";color:");
-            b.Append(Foreground);
-            b.Append(";}" +
-                     "img {"+
-                     "border-style: none;"+
-                     "}"+
-                     "a {" +
-                     "color:");
-            b.Append(Accent);
-            b.Append("}" +
-                     "</style>");
-            b.Append(description.Replace(" src=", " src='gray.jpg' data-original="));
-
-            byte[] bytes = Encoding.UTF8.GetBytes(ConvertExtendedAscii(b.ToString()));
-            // Get the iso store
-            using (IsolatedStorageFile iso = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                try
-                {
-                    // Write the html in the html/index.html
-                    using (IsolatedStorageFileStream output = iso.CreateFile(fileName))
-                    {
-                        output.Write(bytes, 0, bytes.Length);
-                        output.Close();
-                    }
-                }
-                catch (Exception)
-                {
-                    iso.Dispose();
-                    return false;
-                }
-            }
-            return true;
         }
 
         #endregion

@@ -10,6 +10,11 @@ using Microsoft.Phone.Tasks;
 using WPRssReader.Model;
 using WPRssReader.Resources;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
+using System.Windows.Controls;
+using MSPToolkit.Controls;
+using System.Windows.Media;
+using System.Threading;
+using Coding4Fun.Phone.Controls;
 
 namespace WPRssReader
 {
@@ -17,35 +22,36 @@ namespace WPRssReader
     {
         private readonly Dictionary<object, Action> _action =
             new Dictionary<object, Action>();
+        private readonly Pivot articlePivot = new Pivot ();
+        private readonly Thickness _padding = new Thickness(12, 2, 12, 2);
+        private readonly Thickness _bodyMargin = new Thickness(0, 6, 0, 100);
+        private readonly Thickness _titleMargin = new Thickness(0, 0, 0, 6);
 
-        private readonly ApplicationBarIconButton _next;
-
-        private readonly ApplicationBarIconButton _preview;
-        private readonly ApplicationBarIconButton _stared;
         private ObservableCollection<Article> _list;
         private string _value;
-        private bool _isNavigationg = false;
+        private bool IsScrollingRight = true;
+        private bool IsSelectedChanged = false;
+        private int _itemsCount;
+
         public RssPage()
         {
             InitializeComponent();
 
             DataContext = App.ViewModel;
 
-            _preview = (ApplicationBarIconButton) ApplicationBar.Buttons[0];
-            _stared = (ApplicationBarIconButton) ApplicationBar.Buttons[2];
-            _next = (ApplicationBarIconButton) ApplicationBar.Buttons[3];
+            //cos ApplicationBarIconButton doesn`t have binding at all
+            var appBar = ApplicationBar;
+            ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.link;
+            ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.add_star;
 
-            _action.Add(ApplicationBar.Buttons[0], PreviewArticle);
-            _action.Add(ApplicationBar.Buttons[1], ()=>ShowArticleInBrowser(App.ViewModel.Article.Link));
-            _action.Add(ApplicationBar.Buttons[2], AddOrRemoveStar);
-            _action.Add(ApplicationBar.Buttons[3], NextArticle);
+            _action.Add(ApplicationBar.MenuItems[0], () => ShowArticleInBrowser(App.ViewModel.Article.Link));
+            _action.Add(ApplicationBar.MenuItems[1], AddStar);
 
             _action.Add("all", () =>
                 {
                     if (App.ViewModel.CanLoadAllArticles)
                     {
                         App.ViewModel.LoadNextAllArticles();
-                        _next.IsEnabled = true;
                     }
                 });
             _action.Add("new", () =>
@@ -53,7 +59,6 @@ namespace WPRssReader
                     if (App.ViewModel.CanLoadNewArticles)
                     {
                         App.ViewModel.LoadNextNewArticles();
-                        _next.IsEnabled = true;
                     }
                 });
             _action.Add("stared", () =>
@@ -61,16 +66,12 @@ namespace WPRssReader
                     if (App.ViewModel.CanLoadStaredArticles)
                     {
                         App.ViewModel.LoadNextStaredArticles();
-                        _next.IsEnabled = true;
                     }
                 });
             _action.Add("channel", () => { });
 
-            //cos ApplicationBarIconButton doesn`t have binding at all
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[0]).Text = AppResources.preview;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[1]).Text = AppResources.link;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[2]).Text = AppResources.add_star;
-            ((ApplicationBarIconButton) ApplicationBar.Buttons[3]).Text = AppResources.next;
+            articlePivot.SelectionChanged+=PivotSelectionChanged;
+            articlePivot.ManipulationCompleted+=PivotManipulationCompleted;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -94,57 +95,68 @@ namespace WPRssReader
                     _list = new ObservableCollection<Article>(App.ViewModel.Channel.AllArticles);
                     break;
             }
-
-            MenuItemVisibility();
-        }
-
-        private void WebBrowserNavigated(object sender, NavigationEventArgs e)
-        {
-            var element = (WebBrowser) sender;
-            element.Visibility = Visibility.Visible;
-            _isNavigationg = false;
-        }
-
-        private void ArticleDoubleTap(object sender, GestureEventArgs e)
-        {
-            ShowArticleInBrowser(App.ViewModel.Article.Link);
+            if (articlePivot.Items.Count == 0)
+            {
+                var index = _list.IndexOf(App.ViewModel.Article);
+                _itemsCount = _list.Count;
+                articlePivot.Items.Add(new PivotItem());
+                
+                var art = AddArticleToView(App.ViewModel.Article, (PivotItem)articlePivot.Items[0]);
+                if (_itemsCount > 1)
+                {
+                    articlePivot.Items.Add(new PivotItem());
+                    AddArticleToView(_list[index + 1 != _itemsCount ? index + 1 : 0], (PivotItem)articlePivot.Items[1]);
+                }
+                if (_itemsCount > 2)
+                {
+                    articlePivot.Items.Add(new PivotItem());
+                    AddArticleToView(_list[index == 0 ? _itemsCount - 1 : index - 1], (PivotItem)articlePivot.Items[2]);
+                }
+                this.Content=articlePivot;
+            }
         }
 
         private void MenuItemVisibility()
         {
-            if (App.ViewModel.Article != null)
+            if (App.ViewModel.Article == null) return;
+            var articleIndex = _list.IndexOf(App.ViewModel.Article);
+            _itemsCount = _list.Count;
+            var isNextEnabled = articleIndex != _itemsCount - 1;
+            var isPreviewEnabled = articleIndex != 0;
+
+            if (IsScrollingRight && !isNextEnabled)
             {
-                App.ViewModel.Article.IsRead = true;
-
-                _stared.IconUri =
-                    new Uri(
-                        String.Format("/Toolkit.Content/favs.{0}.png", App.ViewModel.Article.IsStared ? "remove" : "add"),
-                        UriKind.Relative);
-                _next.IsEnabled = _list.IndexOf(App.ViewModel.Article) != _list.Count - 1;
-                if (_next.IsEnabled == false)
-                {
-                    _action[_value]();
-                }
-                _preview.IsEnabled = _list.IndexOf(App.ViewModel.Article) != 0;
-
-                BrowserNavigate();
+                _action[_value]();
             }
-            else
+
+            var article = IsScrollingRight ?
+                        isNextEnabled ? _list.ElementAt(articleIndex + 1) : RepeatedArticle() :
+                        isPreviewEnabled ? _list.ElementAt(articleIndex - 1) : RepeatedArticle(false);
+
+            if (article != null && _itemsCount != articlePivot.Items.Count)
             {
-                _next.IsEnabled =
-                    _preview.IsEnabled = false;
+                AddArticleToView(article, (PivotItem)articlePivot.Items[IsScrollingRight ?
+                                                                              (articlePivot.SelectedIndex + 1) % 3 :
+                                                                              articlePivot.SelectedIndex == 0 ? 2 :
+                                                                                                                   articlePivot.SelectedIndex - 1]);
             }
         }
 
-        private void BrowserNavigate()
+        public Article RepeatedArticle(bool isLast = true)
         {
-            _isNavigationg = true;
-            const string fileName = "index.html";
-            if (App.ViewModel.BuildHTML(App.ViewModel.Article.Description, fileName))
+            if (_itemsCount > 3)
             {
-                Browser.Visibility = Visibility.Collapsed;
-                Browser.Navigate(new Uri(fileName, UriKind.Relative));
+                ToastPrompt toast = new ToastPrompt
+                {
+                    MillisecondsUntilHidden = 1500,
+                    Foreground = App.WhiteColor,
+                    Message = !isLast ? AppResources.feed_item_first : AppResources.feed_item_last
+                };
+
+                toast.Show();
             }
+
+            return _list[isLast ? 0 : _itemsCount - 1];
         }
 
         #region Bar buttons
@@ -152,14 +164,6 @@ namespace WPRssReader
         private void BarButtonClick(object sender, EventArgs e)
         {
             _action[sender]();
-        }
-
-        private void NextArticle()
-        {
-            int number = _list.IndexOf(App.ViewModel.Article) + 1;
-
-            App.ViewModel.Article = _list.ElementAt(number);
-            MenuItemVisibility();
         }
 
         private void ShowArticleInBrowser(string url)
@@ -175,42 +179,87 @@ namespace WPRssReader
             web.Show();
         }
 
-        private void PreviewArticle()
+        private void AddStar()
         {
-            int number = _list.IndexOf(App.ViewModel.Article) - 1;
+            App.ViewModel.Article.IsStared = !App.ViewModel.Article.IsStared;
 
-            App.ViewModel.Article = _list.ElementAt(number);
-            MenuItemVisibility();
-        }
+            ToastPrompt toast = new ToastPrompt
+            {
+                MillisecondsUntilHidden = 1500,
+                Foreground = App.WhiteColor,
+                Message = App.ViewModel.Article.IsStared ? AppResources.star_added : AppResources.star_removed
+            };
 
-        private void AddOrRemoveStar()
-        {
-            App.ViewModel.Article.IsStared = ! App.ViewModel.Article.IsStared;
-            const string str = "/Toolkit.Content/favs.{0}.png";
-            string str2;
-            if (App.ViewModel.Article.IsStared)
-            {
-                str2 = "remove";
-                _stared.Text = AppResources.remove_star;
-            }
-            else
-            {
-                str2 = "add";
-                _stared.Text = AppResources.add_star;
-            }
-            _stared.IconUri = new Uri(String.Format(str, str2), UriKind.Relative);
+            toast.Show();
         }
 
         #endregion
 
-        private void Browser_Navigating(object sender, NavigatingEventArgs e)
+        private object AddArticleToView(Article art, PivotItem item)
         {
-            if (!_isNavigationg)
-            {
-                ShowArticleInBrowser(e.Uri.OriginalString);
-                e.Cancel = true;
-            }
+            art.IsRead = true;
 
+            var scroll = new ScrollViewer();
+            var panel = new StackPanel();
+            scroll.Content = panel;
+            panel.Children.Add(new HTMLTextBox()
+            {
+                Html = String.Format("<a style='color:{2}' href='{0}'>{1}</a>", art.Link, art.Title,App.ViewModel.Foreground),
+                Margin = _titleMargin,
+                FontSize = 28
+            });
+
+            panel.Children.Add(new Border
+            {
+                Background = (Brush)App.Current.Resources["PhoneAccentBrush"],
+                Child = new TextBlock
+                {
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Text = RssViewModel.DateConvertor.ToUserFriendlyString(art.PubDate).ToString(),
+                    FontSize = 20,
+                    Margin = _padding,
+                    Foreground = App.WhiteColor
+                },
+                Margin = _padding
+            });
+
+            panel.Children.Add(new HTMLTextBox
+            {
+                Html = "<style type='text/css'>a{color:gray;}</style>" + art.Description,
+                Padding = _bodyMargin,
+                FontSize = 24
+            });
+
+            item.Content = scroll;
+            item.Tag = art;
+            return panel;
+        }
+
+        private void PivotSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var removeIndex = articlePivot.Items.IndexOf(e.RemovedItems[0]);
+            var addIndex = articlePivot.Items.IndexOf(e.AddedItems[0]);
+
+            App.ViewModel.Article = (Article)((PivotItem)e.AddedItems[0]).Tag;
+
+            IsScrollingRight = removeIndex == 2 ? addIndex == 0 : removeIndex + 1 == addIndex;
+            IsSelectedChanged = true;
+        }
+
+        private void PivotManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            if (IsSelectedChanged)
+            {
+                MenuItemVisibility();
+                IsSelectedChanged = false;
+            }
+        }
+        private void OnApplicationBarStateChanged(object sender, ApplicationBarStateChangedEventArgs e)
+        {
+            var appBar = sender as ApplicationBar;
+            if (appBar == null) return;
+
+            appBar.Opacity = e.IsMenuVisible ? 1 : .65;
         }
     }
 }

@@ -11,6 +11,7 @@ using MSPToolkit.Utilities;
 using Microsoft.Phone.Tasks;
 using System.Text;
 using Coding4Fun.Phone.Controls;
+using System.Windows.Input;
 
 namespace WPRssReader
 {
@@ -25,6 +26,8 @@ namespace WPRssReader
         private readonly Dictionary<object, Action> _loadAction =
             new Dictionary<object, Action>();
 
+        private const string MinDBUpdated = "1901/01/01";
+
         // Constructor
         public MainPage()
         {
@@ -35,8 +38,6 @@ namespace WPRssReader
 
             _action.Add("DELETE", App.ViewModel.DeleteChannel);
             _action.Add("START_MENU", PinChannelToStart);
-            _action.Add("UP", App.ViewModel.MoveChannelUp);
-            _action.Add("DOWN", App.ViewModel.MoveChannelDown);
 
             _loadAction.Add("NEW", App.ViewModel.LoadNextNewArticles);
             _loadAction.Add("ALL", App.ViewModel.LoadNextAllArticles);
@@ -47,6 +48,7 @@ namespace WPRssReader
             _loadAction.Add(2, App.ViewModel.RefreshArticles);
             _loadAction.Add(3, App.ViewModel.RefreshStared);
 
+            _loadAction.Add(10, App.ViewModel.ReadRealAll);
             _loadAction.Add(11, App.ViewModel.ReadAll);
             _loadAction.Add(12, App.ViewModel.ReadNew);
             _loadAction.Add(13, () =>
@@ -65,13 +67,14 @@ namespace WPRssReader
             //cos ApplicationBarIconButton doesn`t have binding at all
             var appBar = (ApplicationBar)Resources[_appBars[0]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.add;
-            ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
+            ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.check_all;
+            ((ApplicationBarIconButton)appBar.Buttons[2]).Text = AppResources.refresh;
 
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
             ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
             ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
 
-            //all
+            //new
             appBar = (ApplicationBar)Resources[_appBars[1]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.check_all;
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
@@ -80,7 +83,7 @@ namespace WPRssReader
             ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
             ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
 
-            //new
+            //all
             appBar = (ApplicationBar)Resources[_appBars[2]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.check_all;
             ((ApplicationBarIconButton)appBar.Buttons[1]).Text = AppResources.refresh;
@@ -88,7 +91,7 @@ namespace WPRssReader
             ((ApplicationBarMenuItem)appBar.MenuItems[0]).Text = AppResources.setting;
             ((ApplicationBarMenuItem)appBar.MenuItems[1]).Text = AppResources.send_email;
             ((ApplicationBarMenuItem)appBar.MenuItems[2]).Text = AppResources.feedback;
-
+            
             //starred
             appBar = (ApplicationBar)Resources[_appBars[3]];
             ((ApplicationBarIconButton)appBar.Buttons[0]).Text = AppResources.remove_stars;
@@ -109,7 +112,15 @@ namespace WPRssReader
 
         private void AddChannelClick(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/AddChanel.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/AddChannel.xaml", UriKind.Relative));
+        }
+
+        private void EditChannelClick(object sender, EventArgs e)
+        {
+            var element = ((FrameworkElement)sender);
+
+            App.ViewModel.Channel = (Channel)element.DataContext;
+            NavigationService.Navigate(new Uri("/EditChannel.xaml", UriKind.Relative));
         }
 
         private void ChanelSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -147,9 +158,20 @@ namespace WPRssReader
 
         private void PinChannelToStart(Channel channel)
         {
+            if (channel.LastUpdate.Value == Convert.ToDateTime(MinDBUpdated))
+            {
+                ToastPrompt toast = new ToastPrompt();
+                toast.Foreground = App.WhiteColor;
+                toast.MillisecondsUntilHidden = 1500;
+                toast.Message = AppResources.tile_not_allow;
+                toast.Show();
+                
+                return;
+            }
+
             string url = string.Format("/ChannelPage.xaml?ID={0}", channel.ID);
             ShellTile tileToFind = ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains(url));
-            var secTileData = App.AddTile(channel.NewCount, channel.ID.ToString(), channel.Title);
+            var secTileData = App.AddTile(channel.NewCount, channel.ID.ToString(), channel.Title);//channel.GetImage, channel.Title);
             
             // If the Tile was found, then update the background image.
             if (tileToFind != null)
@@ -210,6 +232,7 @@ namespace WPRssReader
                 var toast = new ToastPrompt
                 {
                     MillisecondsUntilHidden = 1500,
+                    Foreground = App.WhiteColor,
                     Message = AppResources.channel_removed
                 };
                 toast.Show();
@@ -235,6 +258,16 @@ namespace WPRssReader
                 emailcomposer.Subject = AppResources.email_title;
                 emailcomposer.Body = String.Format(AppResources.email_body, e.DisplayName, strBuild.ToString());
                 emailcomposer.Show();
+            }
+        }
+
+        private void SearchKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            if (e.Key == Key.Enter)
+            {
+                App.ViewModel.Search = textBox.Text;
+                this.Focus();
             }
         }        
     }

@@ -145,8 +145,26 @@ or copy/paste from browser</value>
   <data name="add_star" xml:space="preserve">
     <value>Add star</value>
   </data>
+  <data name="channel_edit" xml:space="preserve">
+    <value>Edit channel</value>
+  </data>
+  <data name="channel_edit_done" xml:space="preserve">
+    <value>The changes have been saved</value>
+  </data>
+  <data name="channel_link" xml:space="preserve">
+    <value>URL address</value>
+  </data>
+  <data name="channel_name" xml:space="preserve">
+    <value>Channel name</value>
+  </data>
   <data name="channel_removed" xml:space="preserve">
     <value>Channel was removed</value>
+  </data>
+  <data name="channel_row_index" xml:space="preserve">
+    <value>Row index</value>
+  </data>
+  <data name="channel_title_error" xml:space="preserve">
+    <value>Too short title :(</value>
   </data>
   <data name="check_all" xml:space="preserve">
     <value>All read</value>
@@ -175,17 +193,23 @@ or copy/paste from browser</value>
   <data name="feedback" xml:space="preserve">
     <value>feedback</value>
   </data>
+  <data name="feed_item_first" xml:space="preserve">
+    <value>First item</value>
+  </data>
+  <data name="feed_item_last" xml:space="preserve">
+    <value>Last item</value>
+  </data>
   <data name="leave_feedback" xml:space="preserve">
     <value>Leave feedback</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>Link</value>
+    <value>Read article</value>
   </data>
   <data name="load_more_items" xml:space="preserve">
     <value>Click here to load more items...</value>
   </data>
   <data name="main_all" xml:space="preserve">
-    <value>all</value>
+    <value>search</value>
   </data>
   <data name="main_delete" xml:space="preserve">
     <value>Delete</value>
@@ -220,6 +244,9 @@ or copy/paste from browser</value>
   <data name="no_data" xml:space="preserve">
     <value>no data, try refresh...</value>
   </data>
+  <data name="no_data_search" xml:space="preserve">
+    <value>No data found...</value>
+  </data>
   <data name="preview" xml:space="preserve">
     <value>Previous</value>
   </data>
@@ -231,6 +258,9 @@ or copy/paste from browser</value>
   </data>
   <data name="remove_stars" xml:space="preserve">
     <value>Remove stars</value>
+  </data>
+  <data name="save_and_close" xml:space="preserve">
+    <value>Save and close</value>
   </data>
   <data name="send_email" xml:space="preserve">
     <value>Send best by email</value>
@@ -256,6 +286,12 @@ or copy/paste from browser</value>
   <data name="setting_name" xml:space="preserve">
     <value>SETTINGS</value>
   </data>
+  <data name="star_added" xml:space="preserve">
+    <value>Star added</value>
+  </data>
+  <data name="star_removed" xml:space="preserve">
+    <value>Star removed :(</value>
+  </data>
   <data name="sync_error" xml:space="preserve">
     <value>Synchronization error</value>
   </data>
@@ -264,5 +300,8 @@ or copy/paste from browser</value>
   </data>
   <data name="tile_title" xml:space="preserve">
     <value>New articles</value>
+  </data>
+  <data name="tile_not_allow" xml:space="preserve">
+    <value>Wrong channel, can`t to pin :(</value>
   </data>
 </root>

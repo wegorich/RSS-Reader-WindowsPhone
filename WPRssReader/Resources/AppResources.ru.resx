@@ -121,7 +121,7 @@
     <value>Добавить</value>
   </data>
   <data name="add_cancel" xml:space="preserve">
-    <value>Выйти</value>
+    <value>Закрыть</value>
   </data>
   <data name="add_feed" xml:space="preserve">
     <value>Новый канал</value>
@@ -145,8 +145,26 @@
   <data name="add_star" xml:space="preserve">
     <value>Добавить звезду</value>
   </data>
+  <data name="channel_edit" xml:space="preserve">
+    <value>Править ленту</value>
+  </data>
+  <data name="channel_edit_done" xml:space="preserve">
+    <value>Изменения успешно сохраненны</value>
+  </data>
+  <data name="channel_link" xml:space="preserve">
+    <value>Ссылка на ленту</value>
+  </data>
+  <data name="channel_name" xml:space="preserve">
+    <value>Название ленты</value>
+  </data>
   <data name="channel_removed" xml:space="preserve">
     <value>Канал был удален</value>
+  </data>
+  <data name="channel_row_index" xml:space="preserve">
+    <value>Порядковый номер</value>
+  </data>
+  <data name="channel_title_error" xml:space="preserve">
+    <value>Слишком маленькое название :(</value>
   </data>
   <data name="check_all" xml:space="preserve">
     <value>Прочитать все</value>
@@ -175,18 +193,24 @@
   <data name="feedback" xml:space="preserve">
     <value>отзывы</value>
   </data>
+  <data name="feed_item_first" xml:space="preserve">
+    <value>Начало ленты</value>
+  </data>
+  <data name="feed_item_last" xml:space="preserve">
+    <value>Конец ленты</value>
+  </data>
   <data name="leave_feedback" xml:space="preserve">
     <value>Оставить отзыв</value>
   </data>
   <data name="link" xml:space="preserve">
-    <value>Ссылка</value>
+    <value>Читать статью</value>
   </data>
   <data name="load_more_items" xml:space="preserve">
     <value>Нажмите сюда, 
 что бы отобразить еще записей...</value>
   </data>
   <data name="main_all" xml:space="preserve">
-    <value>все</value>
+    <value>поиск</value>
   </data>
   <data name="main_delete" xml:space="preserve">
     <value>Удалить</value>
@@ -223,6 +247,9 @@
     <value>Не могу найти данных, 
 пропробуте обновить страничку...</value>
   </data>
+  <data name="no_data_search" xml:space="preserve">
+    <value>Ничего не удалось найти...</value>
+  </data>
   <data name="preview" xml:space="preserve">
     <value>Назад</value>
   </data>
@@ -230,10 +257,13 @@
     <value>Обновить</value>
   </data>
   <data name="remove_star" xml:space="preserve">
-    <value>Забрать звезду</value>
+    <value>Забрать звездочку</value>
   </data>
   <data name="remove_stars" xml:space="preserve">
-    <value>Забрать звезды</value>
+    <value>Забрать звездочки</value>
+  </data>
+  <data name="save_and_close" xml:space="preserve">
+    <value>Сохранить и закрыть</value>
   </data>
   <data name="send_email" xml:space="preserve">
     <value>Отправить лучшие</value>
@@ -259,6 +289,12 @@
   <data name="setting_name" xml:space="preserve">
     <value>НАСТРОЙКИ</value>
   </data>
+  <data name="star_added" xml:space="preserve">
+    <value>Звездочка добавленна</value>
+  </data>
+  <data name="star_removed" xml:space="preserve">
+    <value>Звездочки больше нет :(</value>
+  </data>
   <data name="sync_error" xml:space="preserve">
     <value>Ошбика синхронизации</value>
   </data>
@@ -267,5 +303,8 @@
   </data>
   <data name="tile_title" xml:space="preserve">
     <value>Новые статьи</value>
+  </data>
+  <data name="tile_not_allow" xml:space="preserve">
+    <value>Неправильный канал, нельзя закрепить :(</value>
   </data>
 </root>

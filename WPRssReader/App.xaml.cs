@@ -14,6 +14,7 @@ using WPRssReader.Helper;
 using WPRssReader.Model;
 using WPRssReader.Resources;
 using MSPToolkit.Utilities;
+using Microsoft.Phone.Data.Linq;
 
 namespace WPRssReader
 {
@@ -67,12 +68,40 @@ namespace WPRssReader
 
                     // Save categories to the database.
                     db.SubmitChanges();
+
+                    // create an instance of DatabaseSchemaUpdater
+                    DatabaseSchemaUpdater schemaUpdater = db.CreateDatabaseSchemaUpdater();
+                    
+                    // assign database schema version before calling Execute
+                    schemaUpdater.DatabaseSchemaVersion = 1;
+                    // execute changes to database schema
+                    schemaUpdater.Execute();
+                }
+                else
+                {
+                    // create an instance of DatabaseSchemaUpdater
+                    DatabaseSchemaUpdater schemaUpdater = db.CreateDatabaseSchemaUpdater();
+                    // get current database schema version
+                    // if not changed the version is 0 by default
+                    int version = schemaUpdater.DatabaseSchemaVersion;
+
+                    // if current version of database schema is old
+                    if (version == 0)
+                    {
+                        // add Address column to the table corresponding to the Person class
+                        schemaUpdater.AddColumn<Channel>("Image");
+                        schemaUpdater.AddColumn<Article>("AddDate");
+                        // IMPORTANT: update database schema version before calling Execute
+                        schemaUpdater.DatabaseSchemaVersion = 1;
+                        // execute changes to database schema
+                        schemaUpdater.Execute();
+                    }                
                 }
             }
-            SaveFilesToIsoStore();
         }
 
         public static RssViewModel ViewModel { get; private set; }
+        public static SolidColorBrush WhiteColor = new SolidColorBrush(Colors.White);
         public static AppSettings Settings { get; private set; }
         // Specify the local database connection string.
 
@@ -150,7 +179,7 @@ namespace WPRssReader
 
             // Ensure that required application state is persisted here.
             ShellTile apptile = ShellTile.ActiveTiles.First();
-            
+
             apptile.Update(AddTile(ViewModel.NewCount, "first"));
 
             foreach (Channel c in ViewModel.Channels)
@@ -161,12 +190,12 @@ namespace WPRssReader
                 // If the Tile was found, then update the background image.
                 if (tileToFind != null)
                 {
-                    tileToFind.Update( AddTile(c.NewCount,c.ID.ToString(),c.Title));
+                    tileToFind.Update(AddTile(c.NewCount, c.ID.ToString(), c.Title));
                 }
             }
         }
 
-        public static StandardTileData AddTile(int count,string id,string title=null)
+        public static StandardTileData AddTile(int count, string id, string title = null)
         {
             StandardTileData secTileData = count > 0
                                                ? new StandardTileData
@@ -205,64 +234,6 @@ namespace WPRssReader
             {
                 // An unhandled exception has occurred; break into the debugger
                 Debugger.Break();
-            }
-        }
-
-        private void SaveFilesToIsoStore()
-        {
-            //These files must match what is included in the application package,
-            //or BinaryStream.Dispose below will throw an exception.
-            string[] files =
-                {
-                    "gray.jpg",
-                    "jquery.js",
-                    "jquery.lazyload.js"
-                };
-
-            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-
-            if (false == isoStore.FileExists(files[0]))
-            {
-                foreach (string f in files)
-                {
-                    StreamResourceInfo sr = GetResourceStream(new Uri(f, UriKind.Relative));
-                    using (var br = new BinaryReader(sr.Stream))
-                    {
-                        byte[] data = br.ReadBytes((int)sr.Stream.Length);
-                        SaveToIsoStore(f, data);
-                    }
-                }
-            }
-        }
-
-        private void SaveToIsoStore(string fileName, byte[] data)
-        {
-            string strBaseDir = string.Empty;
-            const string delimStr = "/";
-            char[] delimiter = delimStr.ToCharArray();
-            string[] dirsPath = fileName.Split(delimiter);
-
-            //Get the IsoStore.
-            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-
-            //Re-create the directory structure.
-            for (int i = 0; i < dirsPath.Length - 1; i++)
-            {
-                strBaseDir = Path.Combine(strBaseDir, dirsPath[i]);
-                isoStore.CreateDirectory(strBaseDir);
-            }
-
-            //Remove the existing file.
-            if (isoStore.FileExists(fileName))
-            {
-                isoStore.DeleteFile(fileName);
-            }
-
-            //Write the file.
-            using (var bw = new BinaryWriter(isoStore.CreateFile(fileName)))
-            {
-                bw.Write(data);
-                bw.Close();
             }
         }
 

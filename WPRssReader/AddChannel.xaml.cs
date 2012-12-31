@@ -4,6 +4,7 @@ using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
 using WPRssReader.Resources;
 using Coding4Fun.Phone.Controls;
+using System.Windows.Input;
 
 namespace WPRssReader
 {
@@ -19,17 +20,26 @@ namespace WPRssReader
             ((ApplicationBarIconButton)ApplicationBar.Buttons[2]).Text = AppResources.add_cancel;
         }
 
+        private void UrlKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SaveClick(sender, e);
+                this.Focus();
+            }
+        }  
+
         private void SaveClick(object sender, EventArgs e)
         {
             string address = RssLink.Text;
 
-            ToastPrompt toast = new ToastPrompt();
-            toast.MillisecondsUntilHidden = 1500;
-
-            if (String.IsNullOrEmpty(address) || address.Equals("about:blank") ||
+            if (String.IsNullOrWhiteSpace(address) || address.Equals("about:blank") ||
                 !(address.Length > 7 && address.StartsWith("http://") ||
                   address.Length > 8 && address.StartsWith("https://")))
             {
+                ToastPrompt toast = new ToastPrompt();
+                toast.Foreground = App.WhiteColor;
+                toast.MillisecondsUntilHidden = 1500;
                 toast.Message = AppResources.add_message_error;
                 toast.Show();
                 return;
@@ -37,12 +47,18 @@ namespace WPRssReader
             try
             {
                 App.ViewModel.AddChannelCommand.DoExecute(address);
+                ToastPrompt toast = new ToastPrompt();
+                toast.Foreground = App.WhiteColor;
+                toast.MillisecondsUntilHidden = 1500;
                 toast.Message = AppResources.add_message;
                 toast.Show();
             }
             catch (Exception)
             {
+                ToastPrompt toast = new ToastPrompt();
+                toast.MillisecondsUntilHidden = 1500;
                 toast.Message = AppResources.add_message_error;
+                toast.Foreground = App.WhiteColor;
                 toast.Show();
             }
         }

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2010 Express for Windows Phone
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPRssReader", "WPRssReader\WPRssReader.csproj", "{438E7B0B-2D85-451C-BBB4-1BFCB454D43B}"
 EndProject
 Global

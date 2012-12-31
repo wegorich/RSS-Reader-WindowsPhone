@@ -143,11 +143,65 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit channel.
+        /// </summary>
+        public static string channel_edit {
+            get {
+                return ResourceManager.GetString("channel_edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The changes have been saved.
+        /// </summary>
+        public static string channel_edit_done {
+            get {
+                return ResourceManager.GetString("channel_edit_done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL address.
+        /// </summary>
+        public static string channel_link {
+            get {
+                return ResourceManager.GetString("channel_link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel name.
+        /// </summary>
+        public static string channel_name {
+            get {
+                return ResourceManager.GetString("channel_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Channel was removed.
         /// </summary>
         public static string channel_removed {
             get {
                 return ResourceManager.GetString("channel_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row index.
+        /// </summary>
+        public static string channel_row_index {
+            get {
+                return ResourceManager.GetString("channel_row_index", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too short title :(.
+        /// </summary>
+        public static string channel_title_error {
+            get {
+                return ResourceManager.GetString("channel_title_error", resourceCulture);
             }
         }
         
@@ -224,6 +278,24 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First item.
+        /// </summary>
+        public static string feed_item_first {
+            get {
+                return ResourceManager.GetString("feed_item_first", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last item.
+        /// </summary>
+        public static string feed_item_last {
+            get {
+                return ResourceManager.GetString("feed_item_last", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to feedback.
         /// </summary>
         public static string feedback {
@@ -242,7 +314,7 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Link.
+        ///   Looks up a localized string similar to Read article.
         /// </summary>
         public static string link {
             get {
@@ -260,7 +332,7 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to all.
+        ///   Looks up a localized string similar to search.
         /// </summary>
         public static string main_all {
             get {
@@ -368,6 +440,15 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No data found....
+        /// </summary>
+        public static string no_data_search {
+            get {
+                return ResourceManager.GetString("no_data_search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Previous.
         /// </summary>
         public static string preview {
@@ -400,6 +481,15 @@ namespace WPRssReader.Resources {
         public static string remove_stars {
             get {
                 return ResourceManager.GetString("remove_stars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save and close.
+        /// </summary>
+        public static string save_and_close {
+            get {
+                return ResourceManager.GetString("save_and_close", resourceCulture);
             }
         }
         
@@ -476,6 +566,24 @@ namespace WPRssReader.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Star added.
+        /// </summary>
+        public static string star_added {
+            get {
+                return ResourceManager.GetString("star_added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Star removed :(.
+        /// </summary>
+        public static string star_removed {
+            get {
+                return ResourceManager.GetString("star_removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Synchronization error.
         /// </summary>
         public static string sync_error {
@@ -490,6 +598,15 @@ namespace WPRssReader.Resources {
         public static string tile_content {
             get {
                 return ResourceManager.GetString("tile_content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong channel, can`t to pin :(.
+        /// </summary>
+        public static string tile_not_allow {
+            get {
+                return ResourceManager.GetString("tile_not_allow", resourceCulture);
             }
         }
         

@@ -15,10 +15,13 @@ namespace WPRssReader.Model
         private DateTime? _lastUpdate;
         private int _newCount;
         private string _title;
+        private string _image;
+        private Uri _getImage;
 
         // Define item name: private field, public property, and database column.
         private string _url;
-        [Column(IsVersion = true)] private Binary _version;
+        [Column(IsVersion = true)]
+        private Binary _version;
 
         public Channel()
         {
@@ -58,6 +61,28 @@ namespace WPRssReader.Model
             }
         }
 
+        #if DB_VERSION_1
+        [Column]
+        public string Image
+        {
+            get { return _image; }
+            set
+            {
+                if (_image == value) return;
+
+                NotifyPropertyChanging("Image");
+                _image = value;
+                NotifyPropertyChanged("Image");
+                _getImage = new Uri(Image, UriKind.Absolute);
+                NotifyPropertyChanged("GetImage");
+            }
+        }
+        #endif
+        public Uri GetImage
+        {
+            get{ _getImage=_getImage==null?_getImage:new Uri(Image,UriKind.Absolute);
+            return _getImage;}
+        }
         // Define completion value: private field, public property, and database column.
 
         [Column]

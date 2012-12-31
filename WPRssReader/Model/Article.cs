@@ -18,6 +18,7 @@ namespace WPRssReader.Model
         private bool _isStared;
         private string _link;
         private DateTime? _pubDate;
+        private DateTime? _addDate;
         private DateTime? _staredDate;
 
         // Define category name: private field, public property, and database column.
@@ -93,6 +94,22 @@ namespace WPRssReader.Model
                 }
             }
         }
+
+        #if DB_VERSION_1
+        [Column]
+        public DateTime? AddDate
+        {
+            get { return _addDate; }
+            set
+            {
+                if (_addDate == value) return;
+
+                NotifyPropertyChanging("AddDate");
+                _addDate = value;
+                NotifyPropertyChanged("AddDate");
+            }
+        }
+        #endif
 
         // Define completion value: private field, public property, and database column.
 

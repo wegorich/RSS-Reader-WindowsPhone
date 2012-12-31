@@ -63,6 +63,7 @@ namespace WPRssReader.Helper
                     catch (Exception ex)
                     {
                         ToastPrompt toast = new ToastPrompt();
+                        toast.Foreground = App.WhiteColor;
                         toast.MillisecondsUntilHidden = 1500;
                         toast.Message = AppResources.add_message_error;
                         toast.Show();
@@ -76,12 +77,7 @@ namespace WPRssReader.Helper
             }
             catch
             {
-                App.ViewModel.DeleteChannel(c);
-                var toast = new ToastPrompt{
-                                             MillisecondsUntilHidden = 1500,
-                                             Message = AppResources.channel_removed
-                                           };
-                toast.Show();
+                c.LastUpdate = Convert.ToDateTime(MinDBUpdated);
             }
         }
 
@@ -102,10 +98,12 @@ namespace WPRssReader.Helper
 
             if (feed == null) return;
             c.Title = feed.Title.Text;
+            c.Image = feed.ImageUrl.OriginalString;
 
             var articles = feed.Items.Select(item => new Article
                 {
                     PubDate = item.PublishDate.DateTime,
+                    AddDate = DateTime.Now,
                     //The reason for the 8,060-byte limit 
                     Description = item.Summary.Text.Length < 1000 ? item.Summary.Text : item.Summary.Text.Substring(0, 1000),
                     Link = item.Links[0].Uri.OriginalString,
